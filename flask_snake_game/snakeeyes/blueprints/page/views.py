@@ -13,7 +13,3 @@ def privacy():
 @page.route('/terms')
 def terms():
 	return render_template('page/terms.html')
-
-@page.route('/questions')
-def questions():
-	return render_template('page/questions.html')
