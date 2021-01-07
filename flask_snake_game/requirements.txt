@@ -1,3 +1,19 @@
 Flask==0.10.1
 
+werkzeug ==0.14.1
+
+#application server for development and production
+
 gunicorn==19.4.5
+
+
+# Testing and static analysis 
+
+pytest==5.1.0
+
+pytest-cov==2.7.1
+
+flake8==3.7.8
+
+
+

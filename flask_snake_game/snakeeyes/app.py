@@ -2,7 +2,7 @@ from flask import Flask
 
 from snakeeyes.blueprints.page import page
 
-def create_app():
+def create_app(settings_override = None):
 
 
 	app = Flask(__name__, instance_relative_config = True)
@@ -13,6 +13,9 @@ def create_app():
 	# @app.route('/')
 	# def index():
 	# 	return app.config['HELLO']
+
+	if settings_override:
+		app.config.update(settings_override)
 
 	app.register_blueprint(page)
 
