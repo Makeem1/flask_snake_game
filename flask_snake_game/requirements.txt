@@ -17,3 +17,6 @@ flake8==3.7.8
 
 
 Click==6.4
+
+
+flask-debugtoolbar==0.10.0
