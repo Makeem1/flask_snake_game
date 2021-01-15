@@ -1,7 +1,7 @@
 from flask import Flask
 
 from snakeeyes.blueprints.page import page
-from snakeeyes.extensions import debug_toolbar
+from snakeeyes.extensions import debug_toolbar, mail
 
 def create_app(settings_override = None):
 
@@ -34,6 +34,7 @@ def extension(app):
 
 	"""
 	debug_toolbar.init_app(app)
+	mail.init_app(app)
 
 	return None
 

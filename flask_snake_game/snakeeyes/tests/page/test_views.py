@@ -24,6 +24,23 @@ class TestPage(object):
 
 	def test_heads_page(self, client):
 		response = client.get(url_for('page.questions'))
-		if str(response.data) == '<title>Privacy Policy</title>':
-			assert False
+		assert '<title>FAQ-snake eyes application</title>' in str(response.data)
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
