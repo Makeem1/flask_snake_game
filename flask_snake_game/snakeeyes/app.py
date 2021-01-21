@@ -1,7 +1,8 @@
 from flask import Flask
 
 from snakeeyes.blueprints.page import page
-from snakeeyes.extensions import debug_toolbar, mail
+from snakeeyes.blueprints.contact import contact
+from snakeeyes.extensions import debug_toolbar, mail, Csrf
 
 def create_app(settings_override = None):
 
@@ -19,6 +20,7 @@ def create_app(settings_override = None):
 		app.config.update(settings_override)
 
 	app.register_blueprint(page)
+	app.register_blueprint(contact)
 	extension(app)
 
 	return app
@@ -35,6 +37,7 @@ def extension(app):
 	"""
 	debug_toolbar.init_app(app)
 	mail.init_app(app)
+	Csrf.init_app(app)
 
 	return None
 

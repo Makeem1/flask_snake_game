@@ -1,0 +1,14 @@
+{# This macro function below will render flash messsages in the next request #}
+{% macro render() %}
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			<div id="flash-messages" class="row sm-margin-top">
+				{% for message , category in messages  %}
+					<div class="alert alert-{{category}}" role="alert">
+						{{message}}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endwith %}
+{% endmacro %}
