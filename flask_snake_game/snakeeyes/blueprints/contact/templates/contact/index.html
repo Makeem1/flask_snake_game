@@ -12,11 +12,12 @@
 			{% call f.form_tag("contact.index") %}
 				<legend>We're here to answer your questions </legend>
 
-				{% call f.form_group(form.email, css_class='margin-bottom', placeholder = "E-mail address ") %}
+				{% call f.form_group(form.email, css_class='margin-bottom', 
+					placeholder = "E-mail address ") %}
 				{% endcall %}
 
-				{% call f.form_group(form.message, css_class='margin-bottom', placeholder = "The more we know , the easier it will be to help you", row='12') %}
-
+				{% call f.form_group(form.message, css_class='margin-bottom', 
+					placeholder = "The more we know , the easier it will be to help you", row='12') %}
 				{% endcall %}
 
 				<button type="submit" class="btn btn-primary "> Send e-mail </button>
