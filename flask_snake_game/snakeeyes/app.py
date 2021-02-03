@@ -1,8 +1,35 @@
 from flask import Flask
 
+from celery import Celery 
+
+
 from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
 from snakeeyes.extensions import debug_toolbar, mail, Csrf
+
+
+CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks' ] 
+
+
+def create_celery_app(app=None):
+	"""Creating a celery app, accepting an app as argument and returning a celery instance"""
+	app = app or create_app()
+
+	celery = Celery(app.import_name, broker=app.config["CELERY_BROKER_URL"], 
+					include=CELERY_TASK_LIST)
+	app.config.update(app.config)
+
+	TaskBase = celery.Task 
+
+	class ContextTask(TaskBase):
+		abstract = True
+
+		def __call__(self, *args, **kwargs):
+			with app.app_context():
+				return TaskBase.__call__(self, *args, **kwargs)
+
+	celery.Task = ContextTask
+	return celery
 
 
 

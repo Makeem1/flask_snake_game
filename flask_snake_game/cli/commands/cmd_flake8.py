@@ -9,7 +9,7 @@ import click
 def cli(skip_init, path):
 	"""
 
-	Run flaske8 to analyse code base
+	Run flake8 to analyse code base
 
 	:param skip_init: Skip checking __init__.py files 
 	param path: Test coverage path 
@@ -20,5 +20,5 @@ def cli(skip_init, path):
 
 	if skip_init:
 		flaske8_flag_exclude = '--exclude __init__.py'
-	cmd = 'flake {0}{1}'.format(path, flaske8_flag_exclude)
+	cmd = 'flake8 {0}{1}'.format(path, flaske8_flag_exclude)
 	return subprocess.call(cmd, shell = True)

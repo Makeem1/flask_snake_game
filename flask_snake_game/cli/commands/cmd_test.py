@@ -5,7 +5,7 @@ import subprocess
 import click 
 
 @click.command()
-@click.argument('path', default= os.path.join('snakeeyes', 'tests'))
+@click.argument('path', default = os.path.join('snakeeyes', 'tests'))
 def cli(path):
 	"""
 	Run tests with pytest

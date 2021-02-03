@@ -1,12 +1,22 @@
 version: '2'
 
 services:
+
+  redis:
+    image: 'redis:3.0-alpine'
+    command: redis-server --requirepass olayinka
+    volumes:
+      - 'redis:/var/lib/redis/data'
+    ports:
+      - '6379:6379'
+
+
   website:
     build: .
     command: >
       gunicorn -b 0.0.0.0:8000
         --access-logfile -
-        --reload
+        --reload 
         "snakeeyes.app:create_app()"
     environment:
       PYTHONUNBUFFERED: 'true'
@@ -14,3 +24,23 @@ services:
       - '.:/snakeeyes'
     ports:
       - '8000:8000'
+
+
+  celery:
+    build: .
+    command: celery worker -l info -A snakeeyes.blueprints.contact.tasks   # -l can be debug or info and - A is set to the directory of the task file
+    env_file:
+      - '.env'
+    volumes:
+      - '.:/snakeeyes'
+
+volumes:
+  redis:
+
+# redis:
+#     image: 'redis:3.0-alpine'
+#     command: redis-server --requirepass devpassword
+#     volumes:
+#       - 'redis:/var/lib/redis/data'
+#     ports:
+#       - '6379:6379'

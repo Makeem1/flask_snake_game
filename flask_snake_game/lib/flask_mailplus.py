@@ -1,4 +1,5 @@
 from flask import render_template
+
 from snakeeyes.extensions import mail
 
 def send_template_message(template=None, ctx=None, *args, **kwargs):

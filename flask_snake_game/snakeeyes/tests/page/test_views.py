@@ -6,17 +6,14 @@ class TestPage(object):
 		response = client.get(url_for('page.home'))
 		assert response.status_code == 200
 
-
 	def test_terms_page(self, client):
 		'''Terms page should respond with success '''
 		response = client.get(url_for('page.terms'))
 		assert response.status_code == 200
 
-
 	def test_privacy_page(self, client):
 		response = client.get(url_for('page.privacy'))
 		assert response.status_code == 200
-
 
 	def test_questions_page(self, client):
 		response = client.get(url_for('page.questions'))
@@ -25,6 +22,12 @@ class TestPage(object):
 	def test_heads_page(self, client):
 		response = client.get(url_for('page.questions'))
 		assert '<title>FAQ-snake eyes application</title>' in str(response.data)
+
+
+class TestContact(object):
+	def test_contact_page(self, client):
+		response = client.get(url_for('contact.index'))
+		assert response.status_code == 200
 	
 
 
