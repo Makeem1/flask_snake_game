@@ -1,19 +1,22 @@
 from flask import url_for 
 
 
+from lib.test import assert_status_with_message
 
-class TestContact:
-	def test_contact_page(self, client):
-		response = client.get(url_for('contact.index'))
-		assert response.status_code == 200 
+    
+class TestContact(object):
+    def test_contact_page(self, client):
+        """ Contact page should respond with a success 200. """
+        response = client.get(url_for('contact.index'))
+        assert response.status_code == 200
 
-	def test_contact_form:
-		form = {
-			"email" : 'makeem@gmail.com',
-			"message" : "Testing contact form for snake application"
-		}
+    def test_contact_form(self, client):
+        """ Contact form should redirect with a message. """
+        form = {
+          'email': 'foo@bar.com',
+          'message': 'Test message from Snake Eyes.'
+        }
 
-		response = client.post(url_for('contact.index'), form = form , follow_redirects = True)
-
-		assert response.status_code == 200
-		assert 'Thanks' in str(response.data)
+        response = client.post(url_for('contact.index'), data=form,
+                               follow_redirects=True)
+        assert_status_with_message(200, response, 'Thanks')

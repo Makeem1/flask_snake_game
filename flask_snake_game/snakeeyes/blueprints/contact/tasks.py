@@ -1,21 +1,27 @@
+
+from lib.flask_mailplus import send_template_message
 from snakeeyes.app import create_celery_app
-from lib.flask_mailplus import send_template_message 
 
 celery = create_celery_app()
 
+
 @celery.task()
 def deliver_contact_email(email, message):
-	"""
-		This function helps to assign task to a request by the user. The import send_template_message 
-		takes all the parameter of the flask_mail extension
-	"""
+    """
+    Send a contact e-mail.
 
+    :param email: E-mail address of the visitor
+    :type user_id: str
+    :param message: E-mail message
+    :type user_id: str
+    :return: None
+    """
+    ctx = {'email': email, 'message' : message}
 
-	ctx = {"email" : email, "message" : message}
+    send_template_message(subject='["Snake Eyes"] Contact',
+                          sender=email,
+                          recipients=[celery.conf.get('MAIL_USERNAME')],
+                          reply_to=message,
+                          template='contact/mail/index.txt', ctx=ctx)
 
-
-	send_template_message(subject =' ["Snake Eyes"] Contact',
-		sender=email,
-		recipients=[celery.conf.get("MAIL_USERNAME")],
-		reply_to=email, 
-		template="contact/mail/index", ctx = ctx)
+    return None

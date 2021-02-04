@@ -8,7 +8,7 @@ from snakeeyes.blueprints.contact import contact
 from snakeeyes.extensions import debug_toolbar, mail, Csrf
 
 
-CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks' ] 
+CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', ] 
 
 
 def create_celery_app(app=None):
@@ -17,7 +17,7 @@ def create_celery_app(app=None):
 
 	celery = Celery(app.import_name, broker=app.config["CELERY_BROKER_URL"], 
 					include=CELERY_TASK_LIST)
-	app.config.update(app.config)
+	celery.conf.update(app.config)
 
 	TaskBase = celery.Task 
 
@@ -36,8 +36,6 @@ def create_celery_app(app=None):
 """ If the settings_override is defined, the config will be updated to the settings_override parameter, if not, the config settings.py is used. """
 
 def create_app(settings_override = None):
-
-
 	app = Flask(__name__, instance_relative_config = True)
 
 	"""Go to the folder config which is relative to the app.yp folder and check settings """

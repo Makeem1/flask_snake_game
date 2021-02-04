@@ -5,8 +5,8 @@ SERVER_NAME = 'localhost:8000'
 SECRET_KEY = 'hellowrodjkadyggcwffkuwhneuedxkewhig'
 
 
-MAIL_USERNAME = 'you@realemailaccount.com'
-MAIL_PASSWORD = 'thebestpasswordyouevermade'
+MAIL_USERNAME = 'patrickpwilliamson9@gmail.com'
+MAIL_PASSWORD = 'Olayinka1'
 
 
 CELERY_BROKER_URL = "redis://:olayinka@redis:6379/0"   #broker , password:olayinka and host:redis port:6379 database for redis : 0 
