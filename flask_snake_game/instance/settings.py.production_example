@@ -11,3 +11,11 @@ MAIL_PASSWORD = 'Olayinka1'
 
 CELERY_BROKER_URL = "redis://:olayinka@redis:6379/0"   #broker , password:olayinka and host:redis port:6379 database for redis : 0 
 CELERY_RESULT_BACKEND = "redis://:olayinka@redis:6379/0" #backend, password:olayinka and host:redis port:6379 database for redis : 0 
+
+
+SQLALCHEMY_DATABASE_URI = pd_str
+SQLALCHEMY_TRACK_MODIFICATION = False
+
+# User 
+SEED_ADMIN_EMAIL = 'dev@local.host'
+SEED_ADMIN_PASSWORD = 'devpassword'

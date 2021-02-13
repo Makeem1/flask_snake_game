@@ -1,4 +1,4 @@
 
-{{ email }} wrote:
+{{ ctx['email'] }} wrote:
 
-{{ message }}
+{{ ctx['message'] }}

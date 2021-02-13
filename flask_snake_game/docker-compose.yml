@@ -10,6 +10,16 @@ services:
     ports:
       - '6379:6379'
 
+  postgres:
+    image: 'postgres:9.5'
+    env_file:
+      - '.env'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432' 
+
+
 
   website:
     build: .
@@ -18,8 +28,8 @@ services:
         --access-logfile -
         --reload 
         "snakeeyes.app:create_app()"
-    environment:
-      PYTHONUNBUFFERED: 'true'
+    env_file:
+      - .env
     volumes:
       - '.:/snakeeyes'
     ports:
@@ -36,6 +46,7 @@ services:
 
 volumes:
   redis:
+  postgres:
 
 # redis:
 #     image: 'redis:3.0-alpine'

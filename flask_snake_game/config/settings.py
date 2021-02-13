@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 DEBUG = True
 
 SERVER_NAME = 'localhost:8000'
@@ -19,7 +21,21 @@ CELERY_RESULT_BACKEND = "redis://:olayinka@redis:6379/0" #backend, password:olay
 CELERY_ACCEPT_CONTENT = ['json'] # accept only json data
 CELERY_TASK_SERIALIZER = 'json' # serialize json data
 CELERY_RESULT_SERIALIZER = 'json' # give the result as json data
-CELERY_REDIS_MAX_CONNECTIONS = 5  # 
+CELERY_REDIS_MAX_CONNECTIONS = 5  # maximum connection  
+
+
+# SQLALCHEMY
+pd_str = 'postgresql://snakeeyes:devpassword@postgres:5432/snakeeyes'  # first snakeeyes --> user while second snakeeyes --> database name
+SQLALCHEMY_DATABASE_URI = pd_str
+SQLALCHEMY_TRACK_MODIFICATION = False
+
+# User 
+SEED_ADMIN_EMAIL = 'patrickpwilliamson9@gmail.com'
+SEED_ADMIN_PASSWORD = 'Olayinka1'
+REMEMBER_COOKIE_DURATION = timedelta(days=90)
+
+
+
 
 
 

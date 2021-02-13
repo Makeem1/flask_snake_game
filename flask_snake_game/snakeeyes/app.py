@@ -1,11 +1,11 @@
 from flask import Flask
-
 from celery import Celery 
+from itsdangerous import URLSafeTimedSerializer
 
 
 from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
-from snakeeyes.extensions import debug_toolbar, mail, Csrf
+from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login 
 
 
 CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', ] 
@@ -31,6 +31,14 @@ def create_celery_app(app=None):
 	celery.Task = ContextTask
 	return celery
 
+
+
+
+
+login.login_view = 'user.login'
+login.login_message = 'You need to login to access this page'
+login.login_message_category = 'info'
+login.session_protection = 'strong'
 
 
 """ If the settings_override is defined, the config will be updated to the settings_override parameter, if not, the config settings.py is used. """
@@ -72,9 +80,7 @@ def extension(app):
 	debug_toolbar.init_app(app)
 	mail.init_app(app)
 	Csrf.init_app(app)
+	db.init_app(app)
+	login.init_app(app)
 
 	return None
-
-
-
-
