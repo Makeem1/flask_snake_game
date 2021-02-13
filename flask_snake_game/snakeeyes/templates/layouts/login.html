@@ -1,4 +1,4 @@
-{% extends 'layout/base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block header %}
     <a href="{{url_for('page.home')}}">
@@ -6,9 +6,9 @@
         class="img-responsive center-block md-margin-bottom"
          width="178" height="176" title="Snake Eyes" alt="Snake Eyes"/>
     </a>
-{% blockend %}
+{% endblock %}
 
 
 {% block footer %}
-    <li><a href="{{url_for('user.signup')}}">Sign up today</a></li>
+    <li><a href="#">Sign up today</a></li>
 {% endblock %}

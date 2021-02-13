@@ -30,8 +30,8 @@ SQLALCHEMY_DATABASE_URI = pd_str
 SQLALCHEMY_TRACK_MODIFICATION = False
 
 # User 
-SEED_ADMIN_EMAIL = 'patrickpwilliamson9@gmail.com'
-SEED_ADMIN_PASSWORD = 'Olayinka1'
+SEED_ADMIN_EMAIL = 'dev@local.host'
+SEED_ADMIN_PASSWORD = 'devpassword'
 REMEMBER_COOKIE_DURATION = timedelta(days=90)
 
 

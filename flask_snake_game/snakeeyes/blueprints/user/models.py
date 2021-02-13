@@ -13,13 +13,14 @@ from lib.util_sqlalchemy import AwareDateTime, ResourceMixin
 from flask_login import UserMixin
 
 from flask import current_app
+from snakeeyes.extensions import login_manager
 
 
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return user_model.query.get(user_id)
+    return User.query.get(user_id)
 
 
 class User(db.Model, ResourceMixin, UserMixin):
@@ -40,7 +41,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     username =db.Column(db.String(30), nullable = True, unique = True)
     email = db.Column(db.String(128), nullable = False, unique = True)
     password = db.Column(db.String(128), nullable = False, unique = False)
-    active = db.Column(db.Boolean, default = True, nullable = False  )
+    active = db.Column(db.Boolean, server_default = '1', nullable = False  )
 
     # user traccking 
     sign_in_count = db.Column(db.Integer, nullable=False, default=0)
@@ -71,9 +72,9 @@ class User(db.Model, ResourceMixin, UserMixin):
     
     def serialize_token(self, expiration=3600 ):
         private_key = current_app.config['SECRET_KEY']
-
         serializer = TimedJSONWebSignatureSerializer(private_key, expires_in=expiration)
         return serializer.dumps({'user_mail' : self.email}).decode('utf-8')
+
 
     @classmethod
     def deserializer_token(cls, token):
@@ -94,7 +95,15 @@ class User(db.Model, ResourceMixin, UserMixin):
         if with_password:
             return check_password_hash(self.password, password)
 
-    
+    def tracking_activities(self, ip_address):
+        """This help to track activities of the user"""
+        self.last_sign_in_on = self.current_sign_in_on
+        self.last_sign_in_ip = self.current_sign_in_ip
+
+        self.current_sign_in_on = datetime.datetime.now(pytz.utc)
+        self.current_sign_in_ip = ip_address
+
+        return self.save()    
 
 
 

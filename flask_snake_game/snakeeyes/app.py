@@ -5,7 +5,8 @@ from itsdangerous import URLSafeTimedSerializer
 
 from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
-from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login 
+from snakeeyes.blueprints.user import user
+from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
 
 CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', ] 
@@ -35,10 +36,10 @@ def create_celery_app(app=None):
 
 
 
-login.login_view = 'user.login'
-login.login_message = 'You need to login to access this page'
-login.login_message_category = 'info'
-login.session_protection = 'strong'
+login_manager.login_view = 'user.login'
+login_manager.login_message = 'You need to login to access this page'
+login_manager.login_message_category = 'info'
+login_manager.session_protection = 'strong'
 
 
 """ If the settings_override is defined, the config will be updated to the settings_override parameter, if not, the config settings.py is used. """
@@ -63,6 +64,7 @@ def create_app(settings_override = None):
 
 	app.register_blueprint(page)
 	app.register_blueprint(contact)
+	app.register_blueprint(user)
 	extension(app)
 
 	return app
@@ -81,6 +83,6 @@ def extension(app):
 	mail.init_app(app)
 	Csrf.init_app(app)
 	db.init_app(app)
-	login.init_app(app)
+	login_manager.init_app(app)
 
 	return None
