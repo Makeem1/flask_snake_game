@@ -1,4 +1,4 @@
-from flask import request, flash, render_template, Blueprint, redirect
+from flask import request, flash, render_template, Blueprint, redirect, url_for
 from snakeeyes.blueprints.user.forms import LoginForm, RegistrationForm, WelcomeForm
 from flask_login import login_user, logout_user, login_required, current_user
 from snakeeyes.blueprints.user.decorators import anonymous_required
@@ -52,6 +52,7 @@ def register():
 @user.route('/logout')
 def logout():
     logout_user()
+    flash("You are logged out")
     return redirect('login')
 
 
@@ -61,7 +62,7 @@ def welcome():
     if current_user.username:
         return redirect(url_for('user.settings'))
         flash("You already pick a username", 'warning')
-        
+
     form = WelcomeForm()
     if form.validate_on_submit():
         user = User()
@@ -70,8 +71,25 @@ def welcome():
         user.username = form.username.data
         user.save()
         flash("Sign up is complete. Enjoy our service", "success")
-        return redirect(url_for('user.'))
+        return redirect(url_for('user.settings'))
     return render_template('user/welcome.html', form = form )
+
+@user.route('/settings')
+@login_required
+def settings():
+    return render_template('user/settings.html')
+
+
+@user.route('/update_credentials', methods=['GET', 'POST'])
+@login_required
+def update_credentials():
+    form = UpdateCredential()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        current_user.password = User.encrypt_password(form.New password )
+        current_user.save()
+        return redirect(url_for('user.settings'))
+    return render_template('user/settings.html', form=form )
 
 
 
