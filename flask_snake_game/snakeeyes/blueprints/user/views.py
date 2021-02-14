@@ -1,5 +1,5 @@
 from flask import request, flash, render_template, Blueprint, redirect, url_for
-from snakeeyes.blueprints.user.forms import LoginForm, RegistrationForm, WelcomeForm
+from snakeeyes.blueprints.user.forms import LoginForm, RegistrationForm, WelcomeForm, UpdateCredential
 from flask_login import login_user, logout_user, login_required, current_user
 from snakeeyes.blueprints.user.decorators import anonymous_required
 from snakeeyes.blueprints.user.models import User
@@ -15,15 +15,15 @@ def login():
     form = LoginForm(next=request.args.get('next'))
     if form.validate_on_submit():
         user = User.find_by_identity(form.identity.data)
-        if user is not None and user.authenticated(form.password.data):
-            flash(f('your are now logged in as {form.identity.data}', 'success'))
+        if user is not None and user.authenticated(password=form.password.data):
+            flash(f'your are now logged in as {form.identity.data}', 'success')
             if login_user(user, remember=form.remember_me.data) and user.is_active():
                 user.tracking_activities(request.remote_addr) 
                 next_page = request.form.get('next')
                 if next_page:
                     return redirect(safe_url(next_page))
                 else:
-                    return redirect('user.settings')
+                    return redirect(url_for('user.welcome'))
             else:
                 flash('Your account has been disable, please contact the customer for further information', 'warning')
         elif user is None:
@@ -56,7 +56,7 @@ def logout():
     return redirect('login')
 
 
-@user.route('/welcome')
+@user.route('/welcome', methods=['GET', 'POST'])
 @login_required
 def welcome():
     if current_user.username:
@@ -64,12 +64,9 @@ def welcome():
         flash("You already pick a username", 'warning')
 
     form = WelcomeForm()
-    if form.validate_on_submit():
-        user = User()
-        form.populate_obj(user)
-  
-        user.username = form.username.data
-        user.save()
+    if form.validate_on_submit():  
+        current_user.username = form.username.data
+        current_user.save()
         flash("Sign up is complete. Enjoy our service", "success")
         return redirect(url_for('user.settings'))
     return render_template('user/welcome.html', form = form )
@@ -85,11 +82,19 @@ def settings():
 def update_credentials():
     form = UpdateCredential()
     if form.validate_on_submit():
-        current_user.email = form.email.data
-        current_user.password = User.encrypt_password(form.New password )
+        new_password = form.new_password.data
+        new_email = form.email.data
+        if new_password:
+            current_user.password = User.encrypt_password(new_password)
+            flash("Your password has been updated", 'success')
+        elif new_email:
+            current_user.email = new_email
+            flash("Your email address has been updated", 'success')
+        else:
+            flash('Your credentials has been updated', 'success')
         current_user.save()
         return redirect(url_for('user.settings'))
-    return render_template('user/settings.html', form=form )
+    return render_template('user/update_credentials.html', form=form )
 
 
 

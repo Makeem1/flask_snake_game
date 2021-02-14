@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from datetime import datetime
+import datetime
+import pytz
 
 from lib.util_sqlalchemy import AwareDateTime
 from snakeeyes.extensions import db 
@@ -39,8 +40,8 @@ class User(db.Model, ResourceMixin, UserMixin):
     # user credentials
     role = db.Column(db.Enum(*ROLE, name = 'role_types', native_enum = False), index= True, nullable = False , server_default = 'member')
     username =db.Column(db.String(30), nullable = True, unique = True)
-    email = db.Column(db.String(128), nullable = False, unique = True)
-    password = db.Column(db.String(128), nullable = False, unique = False)
+    email = db.Column(db.String(128), nullable = False, unique = True, server_default='')
+    password = db.Column(db.String(128), nullable = False, unique = False, server_default='')
     active = db.Column(db.Boolean, server_default = '1', nullable = False  )
 
     # user traccking 
