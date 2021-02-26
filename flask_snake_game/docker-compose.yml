@@ -38,6 +38,7 @@ services:
 
   celery:
     build: .
+    command: --autoreload
     command: celery worker -l info -A snakeeyes.blueprints.contact.tasks   # -l can be debug or info and - A is set to the directory of the task file
     env_file:
       - '.env'

@@ -20,3 +20,5 @@ class TestContact(object):
         response = client.post(url_for('contact.index'), data=form,
                                follow_redirects=True)
         assert_status_with_message(200, response, 'Thanks')
+
+    

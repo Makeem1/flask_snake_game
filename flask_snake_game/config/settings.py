@@ -14,6 +14,9 @@ MAIL_USE_SSL = False
 MAIL_USERNAME = 'patrickpwilliamson9@gmail.com'  # This email is not correct and will be overwritten by instance file
 MAIL_PASSWORD = 'Olayinka1'  # This password is not and will be overwritten by instance settings file
 MAIL_DEFAULT_SENDER = 'patrickpwilliamson9@gmail.com'
+FLASKY_MAIL_SUBJECT_PREFIX = '[Snakeeyes]'
+FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
+
 
 # Celery configuration 
 CELERY_BROKER_URL = "redis://:olayinka@redis:6379/0"   #broker , password:olayinka and host:redis port:6379 database for redis : 0 
@@ -25,9 +28,9 @@ CELERY_REDIS_MAX_CONNECTIONS = 5  # maximum connection
 
 
 # SQLALCHEMY
-pd_str = 'postgresql://snakeeyes:devpassword@postgres:5432/snakeeyes'  # first snakeeyes --> user while second snakeeyes --> database name
-SQLALCHEMY_DATABASE_URI = pd_str
-SQLALCHEMY_TRACK_MODIFICATION = False
+db_uri = 'postgresql://snakeeyes:devpassword@postgres:5433/snakeeyes'  # first snakeeyes --> user while second snakeeyes --> database name
+SQLALCHEMY_DATABASE_URI = db_uri
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # User 
 SEED_ADMIN_EMAIL = 'dev@local.host'

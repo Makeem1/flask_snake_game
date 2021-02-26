@@ -1,4 +1,3 @@
-
 {{ ctx['email'] }} wrote:
 
 {{ ctx['message'] }}

@@ -9,3 +9,5 @@ mail = Mail()
 Csrf = CsrfProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()
+
+

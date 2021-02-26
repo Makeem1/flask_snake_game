@@ -21,7 +21,7 @@ class LoginForm(Form):
 class RegistrationForm(ModelForm):
     email = EmailField(validators=[DataRequired(), Email(), Unique(User.email,get_session=lambda: db.session), Length(6, 128, message='Your email must be between 8-128 character')])
     password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
-    confirm_password = PasswordField('Password', validators=[DataRequired(), Length(8, 128), EqualTo('password', message="Input must match password field ")])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(8, 128), EqualTo('password', message="Input must match password field ")])
 
 
 class WelcomeForm(ModelForm):
@@ -29,11 +29,23 @@ class WelcomeForm(ModelForm):
 
 
 class UpdateCredential(ModelForm):
-    email = EmailField(validators=[DataRequired(), Email(), 
+    email = EmailField(validators=[Optional(), Email(), 
                 Unique(User.email,get_session=lambda: db.session), Length(6, 128, message='Your email must be between 8-128 character')])
-    password = PasswordField('Current Password', validators=[DataRequired(), Length(8, 128)])
     new_password = PasswordField('New Password', validators=[Optional(), Length(8, 128)])
+    confirm_password = PasswordField('Current Password', validators=[Optional(), Length(8, 128), EqualTo('new_password', message='Input must match new password field')])
 
+class BeginPasswordResetForm(Form):
+    email = EmailField('Email', validators=[DataRequired(), Length(6, 128, message='Your email must be between 8-128 character')])
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError("There is not user with this email, you have to register first.")
+
+
+class SettingNewPassword(Form):
+    password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
+    confirm_password = PasswordField('Password', validators=[DataRequired(), Length(8, 128), EqualTo('password', message="Input must match password field ")])
     
 
 

@@ -87,6 +87,26 @@ class User(db.Model, ResourceMixin, UserMixin):
             return None
 
 
+    
+    @classmethod
+    def initialize_password_reset(cls, identity):
+        """
+        Generate a token to reset the password for a specific user.
+
+        :param identity: User e-mail address or username
+        :type identity: str
+        :return: User instance
+        """
+        u = User.find_by_identity(identity)
+        reset_token = u.serialize_token()
+
+        # This prevents circular imports.
+        from snakeeyes.blueprints.user.tasks import (
+            deliver_password_reset_email)
+        deliver_password_reset_email.delay(u.id, reset_token)
+
+        return u
+
     def is_active(self):
         """HElp to check wether the account is active or not """
         return self.active 

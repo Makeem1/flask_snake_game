@@ -1,5 +1,6 @@
 from flask import request, flash, render_template, Blueprint, redirect, url_for
-from snakeeyes.blueprints.user.forms import LoginForm, RegistrationForm, WelcomeForm, UpdateCredential
+from snakeeyes.blueprints.user.forms import (LoginForm, RegistrationForm, WelcomeForm, 
+                                                        UpdateCredential, BeginPasswordResetForm, SettingNewPassword)
 from flask_login import login_user, logout_user, login_required, current_user
 from snakeeyes.blueprints.user.decorators import anonymous_required
 from snakeeyes.blueprints.user.models import User
@@ -52,17 +53,15 @@ def register():
 @user.route('/logout')
 def logout():
     logout_user()
-    flash("You are logged out")
-    return redirect('login')
+    flash("You have been logged out", 'success')
+    return redirect(url_for('user.login'))
 
 
 @user.route('/welcome', methods=['GET', 'POST'])
-@login_required
 def welcome():
     if current_user.username:
+        flash("You've choose a username after registering, operation already done.", 'info')
         return redirect(url_for('user.settings'))
-        flash("You already pick a username", 'warning')
-
     form = WelcomeForm()
     if form.validate_on_submit():  
         current_user.username = form.username.data
@@ -72,7 +71,6 @@ def welcome():
     return render_template('user/welcome.html', form = form )
 
 @user.route('/settings')
-@login_required
 def settings():
     return render_template('user/settings.html')
 
@@ -96,6 +94,29 @@ def update_credentials():
         return redirect(url_for('user.settings'))
     return render_template('user/update_credentials.html', form=form )
 
+
+@user.route('/begin_password_reset', methods=['GET', 'POST'])
+@anonymous_required()
+def begin_password_reset():
+    form = BeginPasswordResetForm()
+
+    if form.validate_on_submit():
+        u = User.initialize_password_reset(request.form.get('identity'))
+
+        flash('An email has been sent to {0}.'.format(u.email), 'success')
+        return redirect(url_for('user.login'))
+
+    return render_template('user/begin_password_reset.html', form=form)
+
+
+
+# @user.route('/newpassword/<token>', methods=('GET', 'POST'))
+# @anonymous_required
+# def newpassword(token):
+#     token = request.args.get('token')
+#     form = SettingNewPassword()
+#     if form.validate_on_submit():
+#         user = 
 
 
 

@@ -1,15 +1,14 @@
 from flask import Flask
 from celery import Celery 
-from itsdangerous import URLSafeTimedSerializer
-
-
 from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
 from snakeeyes.blueprints.user import user
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
 
-CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', ] 
+CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', 
+					'snakeeyes.blueprints.user.tasks',
+] 
 
 
 def create_celery_app(app=None):
@@ -31,10 +30,6 @@ def create_celery_app(app=None):
 
 	celery.Task = ContextTask
 	return celery
-
-
-
-
 
 login_manager.login_view = 'user.login'
 login_manager.login_message = 'You need to login to access this page'
