@@ -110,14 +110,26 @@ def begin_password_reset():
 
 
 
-# @user.route('/newpassword/<token>', methods=('GET', 'POST'))
-# @anonymous_required
-# def newpassword(token):
-#     token = request.args.get('token')
-#     form = SettingNewPassword()
-#     if form.validate_on_submit():
-#         user = 
+@user.route('/newpassword', methods=('GET', 'POST'))
+@anonymous_required
+def newpassword(token):
 
+    form = SettingNewPassword(reset_token = request.args.get('reset_token'))
+    if form.validate_on_submit():
+        user = User.deserializer_token(request.form.get('reset_token'))
+        if user is None:
+            flash('Your reset token has expired or tampered with.', 'danger')
+            return redirect(url_for('user.begin_password_reset'))
+
+
+        form.populate_obj(user)
+        user.password = User.encrypt_password(request.form.get('password'))
+        user.save()
+
+        if login_user(user):
+            flash("Your paasword has been reset.", "Success")
+            return redirect(url_for('user.settings'))
+        return render_template('user/new_password.html', form = form )
 
 
 
