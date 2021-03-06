@@ -16,7 +16,7 @@ def app():
 		'DEBUG' : False,
 		'TESTING' : True,
 		'WTF_CSRF_ENABLED': False,
-		'SQLALCHEMY_DATABASE_URI': 'postgresql://postgres:Olayinka1?@localhost:5432/snakeeyes_test' 
+		'SQLALCHEMY_DATABASE_URI': 'postgresql://clone:Olayinka1?@localhost:5430/clone'
 	}
 
 	_app = create_app(settings_override = params)

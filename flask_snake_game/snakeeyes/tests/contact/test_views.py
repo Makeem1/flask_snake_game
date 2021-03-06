@@ -1,7 +1,7 @@
 from flask import url_for 
 
 
-from lib.test import assert_status_with_message
+from lib.tests import assert_status_with_message
 
     
 class TestContact(object):

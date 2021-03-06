@@ -28,7 +28,7 @@ CELERY_REDIS_MAX_CONNECTIONS = 5  # maximum connection
 
 
 # SQLALCHEMY
-db_uri = 'postgresql://snakeeyes:devpassword@postgres:5433/snakeeyes'  # first snakeeyes --> user while second snakeeyes --> database name
+db_uri = 'postgresql://snakeeyes:devpassword@postgres:5432/snakeeyes'  # first snakeeyes --> user while second snakeeyes --> database name
 SQLALCHEMY_DATABASE_URI = db_uri
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 

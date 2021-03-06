@@ -3,6 +3,7 @@ from celery import Celery
 from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
 from snakeeyes.blueprints.user import user
+from snakeeyes.blueprints.admin import admin 
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
 
@@ -60,6 +61,7 @@ def create_app(settings_override = None):
 	app.register_blueprint(page)
 	app.register_blueprint(contact)
 	app.register_blueprint(user)
+	app.register_blueprint(admin)
 	extension(app)
 
 	return app
