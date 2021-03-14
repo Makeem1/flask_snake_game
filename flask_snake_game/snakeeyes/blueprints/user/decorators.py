@@ -18,13 +18,14 @@ def anonymous_required(url='/settings'):
 
 
 def role_required(*roles):
-	"""Function to check for roles"""
-	def decorator(f):
-		@wraps
-		def decorated_functions(*args, **kwargs):
-			if current_user.role not in roles:
-				flash("Permission denied, you are not allowed to visit this page.", 'danger')
-				return redirect('/')
-			return f(*args, **kwargs)
-		return decorated_functions
-	return decorator
+    """Function checking for user role"""
+
+    def decorators(f):
+        @wraps(f)
+        def decorated_fucntions(*args, **kwargs):
+            if current_user.role not in roles:
+                flash("You do not have permission to visit this page.", 'warning')
+                return redirect('/')
+            return f(*args, **kwargs)
+        return decorated_fucntions
+    return decorators

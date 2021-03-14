@@ -33,6 +33,19 @@ class ResourceMixin(object):
                            default=tzware_datetime,
                            onupdate=tzware_datetime)
 
+
+    @classmethod
+    def sort_by(cls, field, direction):
+        """This helps to sort the column search is performed on the column and direction"""
+        if field not in cls.__table__.columns:
+            field = 'created_on'
+
+        if direction not in ('asc', 'desc'):
+            direction = 'asc'
+
+        return field , direction
+
+        
     def save(self):
         """
         Save a model instance.

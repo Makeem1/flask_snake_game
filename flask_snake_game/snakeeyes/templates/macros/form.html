@@ -64,6 +64,19 @@
 	{{ caller() }}
 
 </form>
+{% endmacro %}
 
 
+{# Render a form for searching #}
+{% macro search(endpoint) %}
+	{% call form_tag(endpoint, method = 'get')%}
+		<label for ='q'></label>
+		<div class="input-group md-margib-bottom">
+			<input type="text" name="q" class="form-control" id='q'
+			value="{{request.args.get('q', '')}}" placeholder="Search by typing, then press enter...">
+		<span class="input-group-addon">
+			<button><i class="fa fa-fw fa-search"></i></button>
+		</span>
+		</div>
+	{% endcall %}
 {% endmacro %}

@@ -16,6 +16,7 @@ class Dashboard(object):
 
 		count = func.count(field)
 		query = db.session.query(count, field).group_by(field).all()
+		
 
 		results = {
 			'query' : query,
