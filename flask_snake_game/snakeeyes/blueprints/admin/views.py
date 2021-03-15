@@ -7,6 +7,7 @@ from snakeeyes.blueprints.admin.models import Dashboard
 from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserForm
 from snakeeyes.blueprints.user.models import User
 from sqlalchemy import text
+from flask_login import current_user
 
 
 admin = Blueprint('admin', __name__,

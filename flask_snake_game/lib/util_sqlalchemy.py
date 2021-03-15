@@ -7,6 +7,7 @@ from lib.util_datetime import tzware_datetime
 from snakeeyes.extensions import db
 
 
+
 class AwareDateTime(TypeDecorator):
     """
     A DateTime type which can only store tz-aware DateTimes.
@@ -47,7 +48,7 @@ class ResourceMixin(object):
 
 
     @classmethod
-    def get_bulk_action_ids(cls, scope, omit_ids=[], query=''):
+    def get_bulk_action_ids(cls, scope, ids, omit_ids=[], query=''):
         """Determine which id to be deleted."""
         omit_ids = list(map(str, omit_ids))
 
@@ -55,7 +56,7 @@ class ResourceMixin(object):
         if scope == 'all_search_result':
             ids = cls.query.with_entities(cls.id).filter(cls.search(query))
             
-            ids = [ str(item(0)) for item in ids]
+            ids = [ str(item[0]) for item in ids]
 
 
         if omit_ids:
@@ -65,13 +66,20 @@ class ResourceMixin(object):
 
 
     @classmethod
-    class bulk_delete(cls, ids):
-        """Delete one or more instances"""
-        delete_count = cls.query.filter(cls.id.in_(ids)).delete(synchronise_session = False)
+    def bulk_delete(cls, ids):
+        """
+        Delete 1 or more model instances.
 
+        :param ids: List of ids to be deleted
+        :type ids: lists
+        :return: Number of deleted instances
+        """
+        from snakeeyes.blueprints.user.models import User
+        delete_count = User.query.filter(cls.id.in_(ids)).delete(
+            synchronize_session=False)
         db.session.commit()
 
-    return delete_count
+        return delete_count
 
 
         
