@@ -45,7 +45,39 @@ class ResourceMixin(object):
 
         return field , direction
 
+
+    @classmethod
+    def get_bulk_action_ids(cls, scope, omit_ids=[], query=''):
+        """Determine which id to be deleted."""
+        omit_ids = list(map(str, omit_ids))
+
+
+        if scope == 'all_search_result':
+            ids = cls.query.with_entities(cls.id).filter(cls.search(query))
+            
+            ids = [ str(item(0)) for item in ids]
+
+
+        if omit_ids:
+            ids = [id for id in ids if id not in omit_ids]
+
+        return ids 
+
+
+    @classmethod
+    class bulk_delete(cls, ids):
+        """Delete one or more instances"""
+        delete_count = cls.query.filter(cls.id.in_(ids)).delete(synchronise_session = False)
+
+        db.session.commit()
+
+    return delete_count
+
+
         
+
+
+
     def save(self):
         """
         Save a model instance.
