@@ -48,7 +48,7 @@ class ResourceMixin(object):
 
 
     @classmethod
-    def get_bulk_action_ids(cls, scope, ids, omit_ids=[], query=''):
+    def get_bulk_action_ids(cls, scope, ids, omit_ids=None, query=''):
         """Determine which id to be deleted."""
         omit_ids = list(map(str, omit_ids))
 
@@ -79,11 +79,7 @@ class ResourceMixin(object):
             synchronize_session=False)
         db.session.commit()
 
-        return delete_count
-
-
-        
-
+        return delete_count   
 
 
     def save(self):

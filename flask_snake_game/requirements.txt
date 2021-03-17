@@ -35,5 +35,8 @@ flask_mail==0.9.1
 Flask-Login==0.3.2
 
 
+#fake extension 
+fake-factory==0.5.7
+
 
 

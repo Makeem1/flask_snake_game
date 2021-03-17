@@ -24,10 +24,7 @@ services:
   website:
     build: .
     command: >
-      gunicorn -b 0.0.0.0:8000
-        --access-logfile -
-        --reload 
-        "snakeeyes.app:create_app()"
+      gunicorn -c "python:config.gunicorn" --reload "snakeeyes.app:create_app()"
     env_file:
       - .env
     volumes:
@@ -48,11 +45,3 @@ services:
 volumes:
   redis:
   postgres:
-
-# redis:
-#     image: 'redis:3.0-alpine'
-#     command: redis-server --requirepass devpassword
-#     volumes:
-#       - 'redis:/var/lib/redis/data'
-#     ports:
-#       - '6379:6379'
