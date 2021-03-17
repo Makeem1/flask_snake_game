@@ -13,7 +13,7 @@ from lib.util_sqlalchemy import AwareDateTime, ResourceMixin
 
 from flask_login import UserMixin
 from sqlalchemy import or_
-from flask import current_app
+from flask import current_app, request
 from snakeeyes.extensions import login_manager
 
 
@@ -67,6 +67,8 @@ class User(db.Model, ResourceMixin, UserMixin):
     
     @classmethod
     def find_by_identity(cls, identity):
+        # the flask logger gives us information about an error about a user who tries to login with wrong details with IP address
+        current_app.logger.debug('{0} has tried to login with ip : {1}'.format(identity, (request.remote_addr)))
         find = User.query.filter( (User.username == identity) | (User.email == identity) ).first()
         return find
 

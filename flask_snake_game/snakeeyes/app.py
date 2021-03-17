@@ -6,6 +6,7 @@ from snakeeyes.blueprints.user import user
 from snakeeyes.blueprints.admin import admin 
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
+from werkzeug.contrib.fixers import ProxyFix
 
 CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', 
 					'snakeeyes.blueprints.user.tasks',
@@ -58,6 +59,10 @@ def create_app(settings_override = None):
 		"""
 		app.config.update(settings_override)
 
+	# the below command helps to configure flask logger in our app configuration
+	app.logger.setLevel(app.config['LOG_LEVEL'])
+
+	middleware(app)
 	app.register_blueprint(page)
 	app.register_blueprint(contact)
 	app.register_blueprint(user)
@@ -81,5 +86,16 @@ def extension(app):
 	Csrf.init_app(app)
 	db.init_app(app)
 	login_manager.init_app(app)
+
+	return None
+
+
+def middleware(app):
+	"""This function serve a bridge between flask and wsgi.
+		It helps to generate the real IP address when using proxy server like nginx
+
+	"""
+
+	app.wsgi_app = ProxyFix(app.wsgi_app)
 
 	return None

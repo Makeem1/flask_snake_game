@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 DEBUG = True
+LOG_LEVEL = 'DEBUG'
 
 SERVER_NAME = 'localhost:8000'
 
