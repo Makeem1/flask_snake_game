@@ -4,6 +4,7 @@ from snakeeyes.blueprints.page import page
 from snakeeyes.blueprints.contact import contact
 from snakeeyes.blueprints.user import user
 from snakeeyes.blueprints.admin import admin 
+from snakeeyes.blueprints.error_page import error
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
 from werkzeug.contrib.fixers import ProxyFix
@@ -63,6 +64,7 @@ def create_app(settings_override = None):
 	app.logger.setLevel(app.config['LOG_LEVEL'])
 
 	middleware(app)
+	app.register_blueprint(error)
 	app.register_blueprint(page)
 	app.register_blueprint(contact)
 	app.register_blueprint(user)
@@ -99,3 +101,34 @@ def middleware(app):
 	app.wsgi_app = ProxyFix(app.wsgi_app)
 
 	return None
+
+
+def exception_handler(app):
+    """
+    Register 0 or more exception handlers (mutates the app passed in).
+
+    :param app: Flask application instance
+    :return: None
+    """
+    mail_handler = SMTPHandler((app.config.get('MAIL_SERVER'),
+                                app.config.get('MAIL_PORT')),
+                               app.config.get('MAIL_USERNAME'),
+                               [app.config.get('MAIL_USERNAME')],
+                               '[Exception handler] A 5xx was thrown',
+                               (app.config.get('MAIL_USERNAME'),
+                                app.config.get('MAIL_PASSWORD')),
+                               secure=())
+
+    mail_handler.setLevel(logging.ERROR)
+    mail_handler.setFormatter(logging.Formatter("""
+    Time:               %(asctime)s
+    Message type:       %(levelname)s
+
+
+    Message:
+
+    %(message)s
+    """))
+    app.logger.addHandler(mail_handler)
+
+    return None
