@@ -1,3 +1,7 @@
+import logging
+
+from logging.handlers import SMTPHandler
+
 from flask import Flask
 from celery import Celery 
 from snakeeyes.blueprints.page import page
@@ -64,6 +68,7 @@ def create_app(settings_override = None):
 	app.logger.setLevel(app.config['LOG_LEVEL'])
 
 	middleware(app)
+	exception_handler(app)
 	app.register_blueprint(error)
 	app.register_blueprint(page)
 	app.register_blueprint(contact)

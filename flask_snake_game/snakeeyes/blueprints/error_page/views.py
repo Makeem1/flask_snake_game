@@ -9,4 +9,3 @@ def page_not_found(e):
 @error.app_errorhandler(500)
 def ser_error(e):
     return render_template('error/error_500.html'), 500
-    
