@@ -39,7 +39,46 @@ SEED_ADMIN_PASSWORD = 'devpassword'
 REMEMBER_COOKIE_DURATION = timedelta(days=90)
 
 
-
+STRIPE_SECRET_KEY = None
+STRIPE_PUBLISHABLE_KEY = None
+STRIPE_API_VERSION = '2016-03-07'
+STRIPE_PLANS = {
+    '0': {
+        'id': 'bronze',
+        'name': 'Bronze',
+        'amount': 100,
+        'currency': 'usd',
+        'interval': 'month',
+        'interval_count': 1,
+        'trial_period_days': 14,
+        'statement_descriptor': 'SNAKEEYES BRONZE',
+        'metadata': {}
+    },
+    '1': {
+        'id': 'gold',
+        'name': 'Gold',
+        'amount': 500,
+        'currency': 'usd',
+        'interval': 'month',
+        'interval_count': 1,
+        'trial_period_days': 14,
+        'statement_descriptor': 'SNAKEEYES GOLD',
+        'metadata': {
+            'recommended': True
+        }
+    },
+    '2': {
+        'id': 'platinum',
+        'name': 'Platinum',
+        'amount': 1000,
+        'currency': 'usd',
+        'interval': 'month',
+        'interval_count': 1,
+        'trial_period_days': 14,
+        'statement_descriptor': 'SNAKEEYES PLATINUM',
+        'metadata': {}
+    }
+}
 
 
 
