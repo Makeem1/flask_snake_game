@@ -9,6 +9,8 @@ from snakeeyes.blueprints.contact import contact
 from snakeeyes.blueprints.user import user
 from snakeeyes.blueprints.admin import admin 
 from snakeeyes.blueprints.error_page import error
+from snakeeyes.blueprints.billing import billing
+from snakeeyes.blueprints.billing import stripe_webhook
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
 
 from werkzeug.contrib.fixers import ProxyFix
@@ -67,8 +69,14 @@ def create_app(settings_override = None):
 	# the below command helps to configure flask logger in our app configuration
 	app.logger.setLevel(app.config['LOG_LEVEL'])
 
+
+	stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
+	stripe.api_version = app.config.get('STRIPE_API_VERSION')
+
 	middleware(app)
 	exception_handler(app)
+	app.register_blueprint(stripe_webhook)
+	app.register_blueprint(billing)
 	app.register_blueprint(error)
 	app.register_blueprint(page)
 	app.register_blueprint(contact)
