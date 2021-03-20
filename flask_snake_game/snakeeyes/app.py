@@ -12,6 +12,8 @@ from snakeeyes.blueprints.error_page import error
 from snakeeyes.blueprints.billing import billing
 from snakeeyes.blueprints.billing import stripe_webhook
 from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
+from snakeeyes.billing.template_processor import format_currency, current_year
+
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -104,6 +106,13 @@ def extension(app):
 
 	return None
 
+def template_filters(app):
+	"""Adding our own custom filter to jinja"""
+	app.jinja_env.filters['format_currency'] = format_currency
+	app.jinja_env.globals.update(current_year=current_year)
+
+	return app.jinja_env
+	
 
 def middleware(app):
 	"""This function serve a bridge between flask and wsgi.
