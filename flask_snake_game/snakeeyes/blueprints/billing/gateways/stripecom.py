@@ -1,5 +1,19 @@
 import stripe 
 
+
+class Card(object):
+	@classmethod
+	def update(cls, customer_id, stripe_token=None):
+		"""Update an existing card through a customer"""
+
+		customer = stripe.Customer.retrieve(customer_id)
+		customer.source = stripe_token 
+
+		return customer.save()
+
+
+
+# This class is responsible for creating of plan in our application. 
 class Plan(object):
 	@classmethod
 	def retrieve(cls, plan):
