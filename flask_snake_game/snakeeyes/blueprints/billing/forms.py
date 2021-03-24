@@ -9,3 +9,6 @@ class CreditCardForm(Form):
 	name = StringField('Name on card', validators=[DataRequired(), Length(1, 254)])
 	coupon = StringField('Do you have a coupon?', validators=[Optional(), Length(1, 128)])
 
+class UpdateSubscriptionForm(Form):
+	coupon_code = StringField('Do you have a coupon code?', validators=[Optional(), Length(1, 125)])
+	

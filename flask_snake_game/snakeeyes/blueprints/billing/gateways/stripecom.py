@@ -78,7 +78,6 @@ class Plan(object):
 			print(e)
 
 
-
 class Subscription(object):
 	@classmethod
 	def create(cls, user=None, email=None, coupon=None, token=None):
@@ -111,4 +110,34 @@ class Subscription(object):
 
  		return stripe.Customer.create(**params)
 
- 		
+
+ 	@classmethod 
+ 	def update(cls, customer_id=None, coupon=None, plan=None):
+ 		"""Updating existing user plan"""
+
+ 		customer = stripe.Customer.retrieve(customer_id)
+ 		subscription_id = customer.subscriptions.data[0].id
+ 		subscription = customer.subscriptions.retrieve(subscription_id)
+
+
+ 		subscription.plan = plan 
+
+ 		if coupon:
+ 			subscription.coupon = coupon
+
+ 		return subscription.save()
+
+ 	@classmethod 
+ 	def cancel(cls, customer_id=None):
+ 		"""Cancel an existing subscritiop"""
+
+ 		customer = stripe.Customer.retrieve(customer_id)
+ 		subscription_id = customer.subscriptions.data[0].id
+
+ 		return customer.subscriptions.retrieve(subscription_id)
+
+
+
+
+
+

@@ -1,7 +1,10 @@
 from flask import Blueprint, redirect, url_for, flash, render_template, rquest, create_app
 from config import settings 
-from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions
+from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions, subscription_required
+from snakeeyes.blueprints.billing.models.subscription import Subscription
 from flask_login import login_required, current_user
+from snakeeyes.blueprints.billing.forms import CreditCardForm, \
+    UpdateSubscriptionForm, CancelSubscriptionForm
 
 billing = Blueprint('billing', __name__, template_folder = '../templates', url_prix = '/subscription')
 
@@ -88,6 +91,31 @@ def update_payment_method():
     return render_template('billing/payment_method.html', form = form , plan = active_plan, card_last4=str(card.last4))
 
 
+@billing.route('/update', methods=['GET', 'POST'])
+@handle_stripe_exceptions
+@subscription_required
+@login_required
+def update():
+	current_plan = current_user.subscription
+	active_plan = Subscription.get_plan_by_id(current_plan)
+	new_plan = Subscription.get_new_plan(request.form.keys())
 
-     
+	plan = Subscription.get_plan_by_id(new_plan)
 
+	is_same_plan = new_plan == active_plan['id']
+
+	if ((new_plan is not None and plan is None) or is_same_plan) and request.method == 'POST':
+		return redirect(url_for('billing.update'))
+
+	form = UpdateSubscriptionForm(coupon_code = current_user.subscription.coupon)
+
+	if form.validate_on_submit():
+		subscription = Subscription()
+		updated = subscription.update(user=current_user, coupon=request.form.get('coupon_code'), plan=plan.get('id'))
+
+
+		if updated:
+			flash('Your subscription has been updated.', 'success')
+			return redirect(url_for(user.settings))
+
+	return render_template('billing/pricing.html', form = form , plan = settings.STRIPE_PLANS, active_plan = active_plan)

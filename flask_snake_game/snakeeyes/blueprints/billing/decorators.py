@@ -1,7 +1,18 @@
-import flask 
 from flask import flash, url_for, redirect
 from functools import wraps
 import stripe
+from flask_login import current_user
+
+
+def subscription_required(f):
+	"""Function to check if user has subscriped"""
+	@wraps(f)
+	def decorated_function(*args, **kwargs):
+		if not current_user.subscription:
+			flash('You do not have current subscription plan', 'warning')
+			return redirect(url_for('billing.pricing'))
+		return f(*args, **kwargs)
+	return decorated_function
 
 
 
