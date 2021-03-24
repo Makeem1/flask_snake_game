@@ -19,7 +19,9 @@ from werkzeug.contrib.fixers import ProxyFix
 
 CELERY_TASK_LIST = [ 'snakeeyes.blueprints.contact.tasks', 
 					'snakeeyes.blueprints.user.tasks',
+					'snakeeyes.blueprints.billing.tasks'
 ] 
+
 
 
 def create_celery_app(app=None):

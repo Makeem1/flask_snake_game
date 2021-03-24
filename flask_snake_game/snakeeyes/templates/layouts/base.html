@@ -1,4 +1,5 @@
 {% import "macros/flash.html" as flash with context %}
+{% import 'billing/macro/billing.html' as billing with context %}
 
 <!DOCTYPE html>
 <html>
@@ -47,6 +48,8 @@
     
 
     {% block header %}{% endblock %}  
+
+    {{ billing.card_expiring_warning() }}
 
     <main class="container">
       

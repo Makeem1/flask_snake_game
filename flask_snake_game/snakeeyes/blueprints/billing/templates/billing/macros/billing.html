@@ -1,3 +1,15 @@
+{% macro car_expiring_warning() %}
+  {% if current_user.si_authenticated and current_user.subscription
+        and current_user.credit_card.is_expiring %}
+        <div class="alert alert-waring" role='alert'>
+          <div class="container">
+            Your credit card is going to expire soon, <a href="{{url_for('billing.update_payment_method')}}">please update it</a>.
+          </div>
+        </div>
+  {% endif %}      
+{% endmacro %}
+
+
 {% macro plan(plan) -%}
   <div class="col-md-4{{ ' scale-up' if plan.metadata.recommended }} {{ ' quarter-faded' if not plan.metadata.recommended }}">
     <div class="panel panel-default{{ 'panel-danger' if plan.metadata.recommended }}">

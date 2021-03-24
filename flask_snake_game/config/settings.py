@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from celery.schedules import crontab 
+
 DEBUG = True
 LOG_LEVEL = 'DEBUG'
 
@@ -26,6 +28,12 @@ CELERY_ACCEPT_CONTENT = ['json'] # accept only json data
 CELERY_TASK_SERIALIZER = 'json' # serialize json data
 CELERY_RESULT_SERIALIZER = 'json' # give the result as json data
 CELERY_REDIS_MAX_CONNECTIONS = 5  # maximum connection  
+CELERYBEAT_SCHEDULE = {
+    'mark_soon_to_expire_credit_card' :{
+    'task' : 'snakeeyes.blueprints.billing.tasks.mark_old_credit_card',
+    'schedule' : crontab(hour=0, minute=0)
+    }
+}
 
 
 # SQLALCHEMY

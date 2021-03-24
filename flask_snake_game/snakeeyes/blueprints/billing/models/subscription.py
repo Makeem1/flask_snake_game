@@ -20,7 +20,7 @@ class Subscription(ResourceMixin, db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id', onupdate='CASCADE', ondelete='CASCADE'), index=True, nullable= False)
 
 
-	# Subscription 
+	# Subscription details
 	plan = db.Column(db.String(128))
 	coupon = db.Column(db.String(128))
 
@@ -82,7 +82,7 @@ class Subscription(ResourceMixin, db.Model):
 			coupon.redeem()
 
 
-		# Create the credit card.
+		# Create the credit card. 
 		credit_card = CreditCard(user_id = user.id, **CreditCard.extract_card_params(customer))
 
 		db.session.add(user)

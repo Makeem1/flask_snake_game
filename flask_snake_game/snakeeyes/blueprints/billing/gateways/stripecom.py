@@ -12,7 +12,6 @@ class Card(object):
 		return customer.save()
 
 
-
 # This class is responsible for creating of plan in our application. 
 class Plan(object):
 	@classmethod
@@ -77,3 +76,39 @@ class Plan(object):
 			return plan.delete()
 		except stripe.error.StripeError as e:
 			print(e)
+
+
+
+class Subscription(object):
+	@classmethod
+	def create(cls, user=None, email=None, coupon=None, token=None):
+		"""
+			Create a new subscription.
+
+        API Documentation:
+          https://stripe.com/docs/api#create_subscription
+
+        :param token: Token returned by JavaScript
+        :type token: str
+        :param email: E-mail address of the customer
+        :type email: str
+        :param coupon: Coupon code
+        :type coupon: str
+        :param plan: Plan identifier
+        :type plan: str
+        :return: Stripe customer
+		"""
+
+		params = {
+			'source' : token,
+			'email' : email ,
+			'plan' : plan
+ 		}
+
+ 		if coupon:
+ 			params['coupon'] = 'coupon'
+
+
+ 		return stripe.Customer.create(**params)
+
+ 		
