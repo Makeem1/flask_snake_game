@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash, render_template, rquest, create_app
+from flask import Blueprint, redirect, url_for, flash, render_template, request, current_app
 from config import settings 
 from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions, subscription_required
 from snakeeyes.blueprints.billing.models.subscription import Subscription
@@ -74,21 +74,19 @@ def update_payment_method():
 
 	if form.validate_on_submit():
 		subscription = Subscription()
-        updated = subscription.update_payment_method(user=current_user,
-                                                     credit_card=card,
-                                                     name=request.form.get(
-                                                         'name'),
-                                                     token=request.form.get(
-                                                         'stripe_token'))
+		updated = subscription.update_payment_method(user=current_user, 
+        												credit_card=card, 
+        												name=request.form.get('name'), 
+        												token=request.form.get('stripe_token'))
 
-        if updated():
-        	flash('Your payment method has been updated.', 'success')
-        else:
-        	flash('You must enable Javascript for this process', 'warning')
+		if updated():
+			flash('Your payment method has been updated.', 'success')
+		else:
+			flash('You must enable Javascript for this process', 'warning')
 
-        return redirect(url_for('user.settings'))
+		return redirect(url_for('user.settings'))
 
-    return render_template('billing/payment_method.html', form = form , plan = active_plan, card_last4=str(card.last4))
+	return render_template('billing/payment_method.html', form = form , plan = active_plan, card_last4=str(card.last4))
 
 
 @billing.route('/update', methods=['GET', 'POST'])

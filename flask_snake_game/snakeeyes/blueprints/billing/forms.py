@@ -12,3 +12,5 @@ class CreditCardForm(Form):
 class UpdateSubscriptionForm(Form):
 	coupon_code = StringField('Do you have a coupon code?', validators=[Optional(), Length(1, 125)])
 	
+class CancelSubscriptionForm(Form):
+	pass

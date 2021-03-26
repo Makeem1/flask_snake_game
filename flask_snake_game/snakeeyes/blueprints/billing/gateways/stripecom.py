@@ -104,37 +104,37 @@ class Subscription(object):
 			'plan' : plan
  		}
 
- 		if coupon:
- 			params['coupon'] = 'coupon'
+		if coupon:
+			params['coupon'] = 'coupon'
 
 
- 		return stripe.Customer.create(**params)
+		return stripe.Customer.create(**params)
 
 
- 	@classmethod 
- 	def update(cls, customer_id=None, coupon=None, plan=None):
- 		"""Updating existing user plan"""
+	@classmethod 
+	def update(cls, customer_id=None, coupon=None, plan=None):
+		"""Updating existing user plan"""
 
- 		customer = stripe.Customer.retrieve(customer_id)
- 		subscription_id = customer.subscriptions.data[0].id
- 		subscription = customer.subscriptions.retrieve(subscription_id)
+		customer = stripe.Customer.retrieve(customer_id)
+		subscription_id = customer.subscriptions.data[0].id
+		subscription = customer.subscriptions.retrieve(subscription_id)
 
 
- 		subscription.plan = plan 
+		subscription.plan = plan 
 
- 		if coupon:
- 			subscription.coupon = coupon
+		if coupon:
+			subscription.coupon = coupon
 
- 		return subscription.save()
+		return subscription.save()
 
- 	@classmethod 
- 	def cancel(cls, customer_id=None):
- 		"""Cancel an existing subscritiop"""
+	@classmethod 
+	def cancel(cls, customer_id=None):
+		"""Cancel an existing subscritiop"""
 
- 		customer = stripe.Customer.retrieve(customer_id)
- 		subscription_id = customer.subscriptions.data[0].id
+		customer = stripe.Customer.retrieve(customer_id)
+		subscription_id = customer.subscriptions.data[0].id
 
- 		return customer.subscriptions.retrieve(subscription_id)
+		return customer.subscriptions.retrieve(subscription_id)
 
 
 

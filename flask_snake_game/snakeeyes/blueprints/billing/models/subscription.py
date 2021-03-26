@@ -3,7 +3,7 @@ import pytz
 
 
 from config import settings
-from lib.util_sqlachemy import ResourceMixin
+from lib.util_sqlalchemy import ResourceMixin
 from snakeeyes.extensions import db 
 from snakeeyes.blueprints.billing.models.credit_card import CreditCard
 from snakeeyes.blueprints.billing.gateways.stripecom import Card as PaymentCard 
@@ -24,7 +24,7 @@ class Subscription(ResourceMixin, db.Model):
 	plan = db.Column(db.String(128))
 	coupon = db.Column(db.String(128))
 
-	def __init__(self, self, **kwarsg):
+	def __init__(self, **kwarsg):
 		super(Subscription,self).__init__(**kwars)
 
 	@classmethod
@@ -143,14 +143,14 @@ class Subscription(ResourceMixin, db.Model):
 
 		# Update the credit card 
 		new_card = CreditCard.extract_card_params(customer)
-        credit_card.brand = new_card.get('brand')
-        credit_card.last4 = new_card.get('last4')
-        credit_card.exp_date = new_card.get('exp_date')
-        credit_card.is_expiring = new_card.get('is_expiring')
+		credit_card.brand = new_card.get('brand')
+		credit_card.last4 = new_card.get('last4')
+		credit_card.exp_date = new_card.get('exp_date')
+		credit_card.is_expiring = new_card.get('is_expiring')
 
-        db.session.add(user)
-        db.session.add(credit_card)
+		db.session.add(user)
+		db.session.add(credit_card)
 
-        db.session.commit()
+		db.session.commit()
 
-        return True
+		return True
