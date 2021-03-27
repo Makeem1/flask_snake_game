@@ -8,7 +8,7 @@ from snakeeyes.extensions import db
 from snakeeyes.blueprints.billing.models.credit_card import CreditCard
 from snakeeyes.blueprints.billing.gateways.stripecom import Card as PaymentCard 
 from snakeeyes.blueprints.billing.gateways.stripecom import \
-											Subscriptiuon as PaymentSubscription
+											Subscription as PaymentSubscription
 from snakeeyes.blueprints.billing.models.coupon import Coupon 
 
 

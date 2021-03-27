@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from snakeeyes.blueprints.billing.forms import CreditCardForm, \
     UpdateSubscriptionForm, CancelSubscriptionForm
 
-billing = Blueprint('billing', __name__, template_folder = '../templates', url_prix = '/subscription')
+billing = Blueprint('billing', __name__, template_folder = '../templates', url_prefix = '/subscription')
 
 
 @billing.route('/pricing')
@@ -20,8 +20,8 @@ def pricing():
 
 
 @billing.route('/create', methods=['GET', 'POST'])
-@handle_stripe_exceptions
-@login_required
+# @handle_stripe_exceptions
+# @login_required
 def create():
 	if current_user.subscription:
 		flash("You already have an active subscription.", 'info')
@@ -56,8 +56,8 @@ def create():
 
 
 @billing.route('/update_pyament_method', methods=['GET', 'GET'])
-@handle_stripe_exceptions
-@login_required
+# @handle_stripe_exceptions
+# @login_required
 def update_payment_method():
 	if not current_user.credit_card:
 		flash('You do not have a payment method on file.', 'error')
@@ -90,9 +90,9 @@ def update_payment_method():
 
 
 @billing.route('/update', methods=['GET', 'POST'])
-@handle_stripe_exceptions
-@subscription_required
-@login_required
+# @handle_stripe_exceptions
+# @subscription_required
+# @login_required
 def update():
 	current_plan = current_user.subscription
 	active_plan = Subscription.get_plan_by_id(current_plan)

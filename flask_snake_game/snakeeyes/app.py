@@ -11,9 +11,18 @@ from snakeeyes.blueprints.admin import admin
 from snakeeyes.blueprints.error_page import error
 from snakeeyes.blueprints.billing import billing
 from snakeeyes.blueprints.billing import stripe_webhook
-from snakeeyes.extensions import debug_toolbar, mail, Csrf, db , login_manager 
-from snakeeyes.billing.template_processor import format_currency, current_year
+from snakeeyes.extensions import (
+	debug_toolbar, 
+	mail, 
+	Csrf,
+	db,
+	login_manager)
 
+from snakeeyes.blueprints.billing.template_processor import (
+	format_currency, 
+	current_year)
+
+import stripe
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -79,6 +88,7 @@ def create_app(settings_override = None):
 
 	middleware(app)
 	exception_handler(app)
+	template_filters(app)
 	app.register_blueprint(stripe_webhook)
 	app.register_blueprint(billing)
 	app.register_blueprint(error)
@@ -112,7 +122,7 @@ def template_filters(app):
 	"""Adding our own custom filter to jinja"""
 	app.jinja_env.filters['format_currency'] = format_currency
 	app.jinja_env.globals.update(current_year=current_year)
-
+	
 	return app.jinja_env
 	
 

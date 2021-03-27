@@ -1,11 +1,15 @@
-form snakeeyes import create_app
+import click 
+from snakeeyes.app import create_app
 from snakeeyes.extensions import db 
 
-from snakeeyes.blueprints.billing.gateways.stripecom import Plan as PaymentPlan  
+from snakeeyes.blueprints.billing.gateways.stripecom import Plan as PaymentPlan
+
 
 app = create_app()
-
+print(app)
 db.app = app
+print(db.app)
+
 
 
 @click.group()
@@ -37,7 +41,7 @@ def sync_plans():
 
 @click.command()
 @click.argument('plan_ids', nargs= -1)
-def delete_paln(plan_ids):
+def delete_plan(plan_ids):
 	"""Delete an plan id"""
 
 	for plan_id in plan_ids:
