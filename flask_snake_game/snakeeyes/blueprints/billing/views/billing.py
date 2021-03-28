@@ -1,4 +1,11 @@
-from flask import Blueprint, redirect, url_for, flash, render_template, request, current_app
+from flask import (
+	Blueprint,
+	redirect, 
+	url_for, 
+	flash, 
+	render_template, 
+	request, 
+	current_app)
 from config import settings 
 from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions, subscription_required
 from snakeeyes.blueprints.billing.models.subscription import Subscription
@@ -34,7 +41,7 @@ def create():
 		flash('Sorry, that plan did not exist.', 'error')
 		return redirect(url_for('billing.pricing'))
 
-	stripe_key = create_app.config.get('STRIPE_PUBLISHABLE_KEY')
+	stripe_key = current_app.config.get('STRIPE_PUBLISHABLE_KEY')
 	form = CreditCardForm(stripe_key=stripe_key, plan = plan )
 
 	if form.validate_on_submit():

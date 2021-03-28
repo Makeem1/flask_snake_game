@@ -18,7 +18,7 @@ class Plan(object):
 	def retrieve(cls, plan):
 		"""Retrieve an existing plan ."""
 		try:
-			return stripe.Plan.retrieve(paln)
+			return stripe.Plan.retrieve(plan)
 		except stripe.error.StripeError as e:
 			print (e)
 
@@ -166,6 +166,32 @@ class Coupon(object):
 		return coupon.delete()
 
 
-	
+class Invoice(object):
+	@classmethod
+	def upcoming(cls, customer_id):
+		"""
+		Retreive an upcoming invoice item from a customer for a user. 
+
+		:Param customer: stripe customer_id
+		:param type : int
+		:return : stripe invoice 
+		"""
+
+		return stripe.Invoice.upcoming(customer=customer_id)
 
 
+
+class Event(object):
+	@classmethod
+	def retrieve(cls, event_id):
+		"""
+		Retrieve an event, this is used to validate the event in attempt to protect us 
+		from potentially malicious events not sent from stripe.
+		:param event_id: stripe event_id 
+		:type: int
+		:return : stripe event 
+		"""
+
+		return stripe.Event.retrieve(event_id)
+
+		

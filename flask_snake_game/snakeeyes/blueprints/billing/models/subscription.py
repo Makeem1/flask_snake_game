@@ -17,7 +17,8 @@ class Subscription(ResourceMixin, db.Model):
 	id = db.Column(db.Integer , primary_key=True)
 
 	# Model relationship
-	user_id = db.Column(db.Integer, db.ForeignKey('users.id', onupdate='CASCADE', ondelete='CASCADE'), index=True, nullable= False)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.id', 
+				onupdate='CASCADE', ondelete='CASCADE'), index=True, nullable= False)
 
 
 	# Subscription details
@@ -31,9 +32,9 @@ class Subscription(ResourceMixin, db.Model):
 	def get_plan_by_id(cls, plan):
 		"""Pick plan base on plan identifier"""
 
-		for key, value in settings.STRIPE_PLANs.items():
+		for key, value in settings.STRIPE_PLANS.items():
 			if value.get('id') == plan:
-				return settings.STRIPE_PLANS[KEY]
+				return settings.STRIPE_PLANS[key]
 
 		return None
 
