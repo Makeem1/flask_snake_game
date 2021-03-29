@@ -19,6 +19,11 @@
         </a>
       </div>
       <ul class="nav navbar-nav">
+        {% if current_user.role == 'admin' %}
+            <li>
+              {% include 'admin/_menu.html' %}
+            </li>
+          {% endif %}
           {% if current_user.is_authenticated and current_user.subscription %}
           {% else %}
             <li><a href="{{ url_for('billing.pricing') }}">Pricing</a></li>

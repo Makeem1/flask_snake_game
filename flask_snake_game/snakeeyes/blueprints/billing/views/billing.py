@@ -68,7 +68,7 @@ def create():
 
     stripe_key = current_app.config.get('STRIPE_PUBLISHABLE_KEY')
     form = CreditCardForm(stripe_key=stripe_key, plan=plan)
-    
+
     if form.validate_on_submit():
         subscription = Subscription()
         created = subscription.create(user=current_user,
@@ -96,7 +96,11 @@ def update():
     current_plan = current_user.subscription.plan
     active_plan = Subscription.get_plan_by_id(current_plan)
     new_plan = Subscription.get_new_plan(request.form.keys())
-    print(new_plan)
+    invest = request.form.keys()
+    for key in invest:
+        print(key)
+        split_key = key.split('submit_')
+        print(split_key)
     plan = Subscription.get_plan_by_id(new_plan)
 
     # Guard against an invalid, missing or identical plan.
