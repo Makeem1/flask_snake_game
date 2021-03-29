@@ -12,7 +12,7 @@ from itsdangerous import URLSafeTimedSerializer, TimedJSONWebSignatureSerializer
 from lib.util_sqlalchemy import AwareDateTime, ResourceMixin
 from snakeeyes.blueprints.billing.models.credit_card import CreditCard
 from snakeeyes.blueprints.billing.models.subscription import Subscription
-# from snakeeyes.blueprints.billing.models.invoice import Invoice
+from snakeeyes.blueprints.billing.models.invoice import Invoice
 from flask_login import UserMixin
 from sqlalchemy import or_
 from flask import current_app, request
@@ -46,7 +46,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     # Subscription relationship
     subscription = db.relationship(Subscription, uselist=False,
                                    backref='users', passive_deletes=True)
-    # invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
+    invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
 
     # user credentials
     role = db.Column(db.Enum(*ROLE, name = 'role_types', native_enum = False), index= True, nullable = False , server_default = 'member')
@@ -54,6 +54,11 @@ class User(db.Model, ResourceMixin, UserMixin):
     email = db.Column(db.String(128), nullable = False, unique = True, server_default='')
     password = db.Column(db.String(128), nullable = False, unique = False, server_default='')
     active = db.Column(db.Boolean, server_default = '1', nullable = False  )
+
+    # Billing.
+    name = db.Column(db.String(128), index=True)
+    payment_id = db.Column(db.String(128), index=True)
+    cancelled_subscription_on = db.Column(AwareDateTime)
 
     # user traccking 
     sign_in_count = db.Column(db.Integer, nullable=False, default=0)
@@ -80,7 +85,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     def find_by_identity(cls, identity):
         # the flask logger gives us information about an error about a user who tries to login with wrong details with IP address
         # Always add this current_app.loger... after seeding database
-        current_app.logger.debug('{0} has tried to login with ip : {1}'.format(identity, (request.remote_addr)))
+        # current_app.logger.debug('{0} has tried to login with ip : {1}'.format(identity, (request.remote_addr)))
         find = User.query.filter( (User.username == identity) | (User.email == identity) ).first()
         return find
 

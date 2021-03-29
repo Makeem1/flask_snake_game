@@ -18,7 +18,7 @@ from snakeeyes.extensions import (
 	db,
 	login_manager)
 
-from snakeeyes.blueprints.billing.template_processor import (
+from snakeeyes.blueprints.billing.template_processors import (
 	format_currency, 
 	current_year)
 

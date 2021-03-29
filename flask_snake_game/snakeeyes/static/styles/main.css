@@ -44,9 +44,9 @@ body {
   margin-top: 20px;
 }
 
+/* Helpers
+-------------------------------------------------- */
 
-/*Helpers
----------------------------------------------------*/
 .small {
   font-size: 12px;
 }
@@ -146,4 +146,46 @@ dd {
   font-family: FontAwesome;
   margin-left: 6px;
   color: #444;
+}
+
+#duration-in-months {
+  display: none;
+}
+
+.rd-date table td {
+  padding: 5px;
+}
+
+/* Billing
+-------------------------------------------------- */
+#coupon_code_status {
+  display: none;
+}
+
+.coupon-code {
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px dashed #e1e1e1;
+}
+
+.coupon-code input {
+  margin-bottom: 5px;
+}
+
+.payment-errors {
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.cc-details {
+  width: 75px;
+}
+
+a.pricing--primary {
+  color: #fff;
+}
+
+.panel {
+  background-color: #e6adad
 }
