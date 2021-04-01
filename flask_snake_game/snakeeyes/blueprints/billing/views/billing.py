@@ -97,10 +97,10 @@ def update():
     active_plan = Subscription.get_plan_by_id(current_plan)
     new_plan = Subscription.get_new_plan(request.form.keys())
     invest = request.form.keys()
-    for key in invest:
-        print(key)
-        split_key = key.split('submit_')
-        print(split_key)
+    # for key in invest:
+    #     print(key)
+    #     split_key = key.split('submit_')
+    #     print(split_key)
     plan = Subscription.get_plan_by_id(new_plan)
 
     # Guard against an invalid, missing or identical plan.

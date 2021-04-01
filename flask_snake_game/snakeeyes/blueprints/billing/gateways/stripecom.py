@@ -154,6 +154,8 @@ class Subscription(object):
         :return: Stripe subscription
         """
         customer = stripe.Customer.retrieve(customer_id)
+        # print(customer)
+        # print(len(customer))
         subscription_id = customer.subscriptions.data[0].id
         subscription = customer.subscriptions.retrieve(subscription_id)
 
