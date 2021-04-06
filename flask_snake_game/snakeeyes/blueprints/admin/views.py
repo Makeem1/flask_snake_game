@@ -27,9 +27,13 @@ def before_request():
 
 @admin.route('')
 def dashboard():
-	group_and_count_users = Dashboard.group_and_count_users()
-	return render_template('admin/page/dashboard.html', 
-				group_and_count_users=group_and_count_users)
+  group_and_count_users = Dashboard.group_and_count_users()
+  group_and_count_plans = Dashboard.group_and_count_plans()
+  group_and_count_coupons = Dashboard.group_and_count_coupons()
+  return  render_template('admin/page/dashboard.html', 
+      group_and_count_users = group_and_count_users,
+      group_and_count_coupons = group_and_count_coupons,
+      group_and_count_plans = group_and_count_plans)
 
 
 @admin.route('/users', defaults={'page': 1})

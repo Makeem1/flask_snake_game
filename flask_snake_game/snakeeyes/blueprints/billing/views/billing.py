@@ -67,6 +67,7 @@ def create():
         return redirect(url_for('billing.pricing'))
 
     stripe_key = current_app.config.get('STRIPE_PUBLISHABLE_KEY')
+    print(stripe_key)
     form = CreditCardForm(stripe_key=stripe_key, plan=plan)
 
     if form.validate_on_submit():
@@ -90,17 +91,13 @@ def create():
 
 @billing.route('/update', methods=['GET', 'POST'])
 @handle_stripe_exceptions
-@subscription_required
+@subscription_required 
 @login_required
 def update():
     current_plan = current_user.subscription.plan
     active_plan = Subscription.get_plan_by_id(current_plan)
     new_plan = Subscription.get_new_plan(request.form.keys())
-    invest = request.form.keys()
-    # for key in invest:
-    #     print(key)
-    #     split_key = key.split('submit_')
-    #     print(split_key)
+
     plan = Subscription.get_plan_by_id(new_plan)
 
     # Guard against an invalid, missing or identical plan.
@@ -174,6 +171,7 @@ def update_payment_method():
                                                          'name'),
                                                      token=request.form.get(
                                                          'stripe_token'))
+        print(request.form.get('stripe_token'))
 
         if updated:
             flash('Your payment method has been updated.', 'success')
