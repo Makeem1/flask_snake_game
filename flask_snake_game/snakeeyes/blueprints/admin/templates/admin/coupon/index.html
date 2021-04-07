@@ -1,0 +1,20 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% import 'billing/macros/billing.html' as billing with context %}
+
+{% block title %}Admin - Coupons / List {% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-6">
+			{ f.search('admin.coupons')}
+		</div>
+		<div class="col-md-6">
+			<a href="{{ url_for('admin.coupons_new') }}
+			" class="btn btn-primary pull-right">
+				Create Coupon
+			</a>
+		</div>
+	</div>
+{% endblock %}
