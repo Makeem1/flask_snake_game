@@ -1,12 +1,14 @@
 from collections import OrderedDict
 
 from flask_wtf import Form
-from wtforms import StringField, SelectField, BooleanField
-from wtforms.validators import DataRequired, Length, Regexp,Optional
+from wtforms import (StringField, SelectField, BooleanField,
+                    IntegerField, FloatField, SelectField, DateTimeField)
+from wtforms.validators import DataRequired, Length, Regexp, Optional, NumberRange
 from wtforms_components import Unique
 from lib.utils_wtforms import ModelForm, choices_from_dict
 
 from snakeeyes.blueprints.user.models import db, User
+from snakeeyes.blueprints.billing.models.coupon import Coupon
 
 
 class SearchForm(Form):
@@ -45,3 +47,20 @@ class UserForm(ModelForm):
 
 class UserCancelSubscriptionForm(Form):
     pass
+
+class CouponForm(Form):
+    percent_off = IntegerField('Percent of (%)',
+                                validators=[Optional(), NumberRange(min=1, max=100)])
+    amount_off = FloatField('Amount off ($)', 
+                                validators=[Optional(), NumberRange(min=0.01, max=21474836.0)]
+    currency = StringField('Code', 
+                            validators=[DataRequired(), Length(min=1, max=32)])
+    duration = SelectField('Duaration', 
+                            validators=[DataRequired()], choices=choices_from_dict(Coupon.DURATION, prepend_blank=False))
+    duration_in_months = IntegerField('Duration', 
+                        validators=[Optional, NumberRange(min=1, max=12) ])
+    max_redeemptions = IntegerField('Max Redeemptions', 
+                                    validators=[Optional(), NumberRange(min=1, max=2147483647)])
+    redeem_by = DateTimeField('Redeem by', 
+                                validators=[Optional()], format='%Y-%m-%d %H:%M%S')
+

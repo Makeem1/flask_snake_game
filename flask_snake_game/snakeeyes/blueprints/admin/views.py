@@ -4,7 +4,7 @@ from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask_login import login_required
 from snakeeyes.blueprints.user.decorators import role_required
 from snakeeyes.blueprints.admin.models import Dashboard
-from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserForm
+from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserForm, UserCancelSubscriptionForm
 from snakeeyes.blueprints.user.models import User
 from sqlalchemy import text
 from flask_login import current_user
@@ -100,3 +100,39 @@ def users_bulk_delete():
         flash('No users were deleted, something went wrong.', 'error')
 
     return redirect(url_for('admin.users'))
+
+@admin.route('/users/cancel_subscription', methods=['POST'])
+def cancel_users_subscription():
+    form = UserCancelSubscriptionForm()
+
+    if form.validate_on_submit():
+        user = db.session.query(User).get(request.form.get('id'))
+
+        if user:
+            subscription = Subscription()
+            if subscription.cancel(user):
+                flash('Subscription has been cancelled for {0}'.format(user.name), 'success' )
+            else:
+              flash('No subscription was cancelled', 'error')
+
+    return redirect(url_for('admin.users'))
+
+
+# Coupons -----------------------------------------------------------------------------------------------------
+
+@admin.route('/coupons', defaults={'page':1})
+@admin.route('/coupons/page/<int:page>')
+def coupons(page):
+    search = SearchForm()
+    bulk_form = BulkDeleteForm()
+
+    sort_by = Coupon.sort_by(request.args.get('sort', 'created_on'),
+                              request.args.get('direction', 'ASC'))
+
+    order_by = '{0} {1}'.format(sort_by[0], sort_by[1])
+
+    paginated_coupons = Coupon.query.filter(Coupon.search(request.args.get('id', ''))).order_by(text(order_values)).paginate(page, 50, True)
+
+    return render_template('admin/coupon/index.html',
+                           form=search_form, bulk_form=bulk_form,
+                           coupons=paginated_coupons)   
