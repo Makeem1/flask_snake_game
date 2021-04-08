@@ -135,4 +135,56 @@ def coupons(page):
 
     return render_template('admin/coupon/index.html',
                            form=search_form, bulk_form=bulk_form,
-                           coupons=paginated_coupons)   
+                           coupons=paginated_coupons)
+
+
+@admin.route('/coupons/new', methods=['GET', 'POST'])
+def coupons_new():
+    coupon = Coupon
+    form = CouponForm()
+
+    if form.validate_on_submit():
+        form.populate_obj(coupon)
+
+        params = {
+            'code': coupon.code,
+            'duration': coupon.duration,
+            'percent_off': coupon.percent_off,
+            'amount_off': coupon.amount_off,
+            'currency': coupon.currency,
+            'redeem_by': coupon.redeem_by,
+            'max_redemptions': coupon.max_redemptions,
+            'duration_in_months': coupon.duration_in_months,
+        }
+
+        if Coupon.create(params):
+          flash('Coupon has been created successfully.', 'succes')
+          return redirect(url_for('admin.coupons'))
+
+    return render_template('admin/coupon/new.html', form=form, coupon=coupon)
+
+
+@admin.route('/coupons/bulk_delete', methods=['POST'])
+def coupon_bulk_delete():
+    form = BulkDeleteForm()
+
+    if form.validate_on_submit():
+        ids = Coupon.get_bulkaction_ids(request.form.get('scope'),
+                                        request.form.getlist('bulk_id'),
+                                        query=request.args.get('q', ''))
+
+        from snakeeyes.blueprints.billing.tasks import delete_coupons
+
+        delete_coupons.dalay(ids)
+
+        flash("{0} coupons(s) were scheduled to be deleted.", 'success')
+
+    else:
+        flash('No coupons were delted, something went wrong', 'error')
+
+    return redirect(url_for('admin.coupons'))
+
+
+    
+
+
