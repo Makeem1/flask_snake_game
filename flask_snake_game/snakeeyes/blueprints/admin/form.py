@@ -42,3 +42,6 @@ class UserForm(ModelForm):
                        choices=choices_from_dict(User.ROLE,
                                                  prepend_blank=False))
     active = BooleanField('Yes, allow this user to sign in')
+
+class UserCancelSubscriptionForm(Form):
+    pass
