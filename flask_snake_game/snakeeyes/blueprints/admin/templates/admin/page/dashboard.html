@@ -6,7 +6,7 @@
 		<div class="col-md-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <a href="#">Billing</a>
+          <a href="{{url_for('admin.coupon')}}">Billing</a>
           <span class="pull-right text-muted">
             {{ group_and_count_plans.total }}
           </span>
@@ -30,7 +30,7 @@
           <hr/>
           <h4>
             Coupons
-            <a href="#"
+            <a href="{{url_for('admin.coupons_new')}}"
                class="btn btn-default btn-sm pull-right">Add</a>
           </h4>
           <h5 class="small text-muted">

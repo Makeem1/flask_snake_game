@@ -69,7 +69,7 @@ class CouponForm(Form):
     duration_in_months = IntegerField('Duration', 
                         validators=[Optional, NumberRange(min=1, max=12) ])
     
-    max_redeemptions = IntegerField('Max Redeemptions', 
+    max_redemptions = IntegerField('Max Redeemptions', 
                                     validators=[Optional(), NumberRange(min=1, max=2147483647)])
     
     redeem_by = DateTimeField('Redeem by', 

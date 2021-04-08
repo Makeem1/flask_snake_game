@@ -4,10 +4,12 @@ from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask_login import login_required
 from snakeeyes.blueprints.user.decorators import role_required
 from snakeeyes.blueprints.admin.models import Dashboard
-from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserForm, UserCancelSubscriptionForm
+from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserForm, UserCancelSubscriptionForm, CouponForm
 from snakeeyes.blueprints.user.models import User
 from sqlalchemy import text
 from flask_login import current_user
+
+from snakeeyes.blueprints.billing.models.coupon import Coupon
 
 
 admin = Blueprint('admin', __name__,
@@ -122,7 +124,7 @@ def cancel_users_subscription():
 
 @admin.route('/coupons', defaults={'page':1})
 @admin.route('/coupons/page/<int:page>')
-def coupons(page):
+def coupon(page):
     search = SearchForm()
     bulk_form = BulkDeleteForm()
 
@@ -183,8 +185,5 @@ def coupon_bulk_delete():
         flash('No coupons were delted, something went wrong', 'error')
 
     return redirect(url_for('admin.coupons'))
-
-
-    
 
 
