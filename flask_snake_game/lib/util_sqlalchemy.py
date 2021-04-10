@@ -48,7 +48,7 @@ class ResourceMixin(object):
 
 
     @classmethod
-    def get_bulk_action_ids(cls, scope, ids, omit_ids=None, query=''):
+    def get_bulk_action_ids(cls, scope, ids, omit_ids=[], query=''):
         """Determine which id to be deleted."""
         omit_ids = list(map(str, omit_ids))
 
