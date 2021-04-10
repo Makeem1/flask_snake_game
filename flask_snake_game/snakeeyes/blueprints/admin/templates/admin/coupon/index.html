@@ -30,7 +30,7 @@
        </p>
     {% endif %}
   {% else %}
-    {% call f.form_tag('admin.coupons_bulk_delete') %}
+    {% call f.form_tag('admin.coupon_bulk_delete') %}
       <table class="table table-striped">
         <thead>
           <tr>
@@ -55,7 +55,7 @@
             </th>
             <th id="bulk_actions" colspan="5">
               <div class="form-inline">
-                {{ f.field(bulk_form.scope, inline=True) }}
+                {{ f.field_input(bulk_form.scope, inline=True) }}
                 <button type="submit"
                         class="btn btn-danger btn-sm">
                   Delete items
