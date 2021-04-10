@@ -32,6 +32,11 @@ CELERYBEAT_SCHEDULE = {
     'mark_soon_to_expire_credit_card' :{
     'task' : 'snakeeyes.blueprints.billing.tasks.mark_old_credit_card',
     'schedule' : crontab(hour=0, minute=0)
+    },
+
+    'expire-old-coupons' : {
+        'task' : 'snakeeyes.blueprints.billing.tasks.expire_old_coupons',
+        'schedule' : crontab(hour=0, minute=1)
     }
 }
 
