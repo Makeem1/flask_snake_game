@@ -11,6 +11,8 @@ from flask_login import current_user
 
 from snakeeyes.blueprints.billing.models.coupon import Coupon
 
+from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions
+
 
 admin = Blueprint('admin', __name__,
                   template_folder='templates', url_prefix='/admin')
@@ -131,19 +133,20 @@ def coupon(page):
     sort_by = Coupon.sort_by(request.args.get('sort', 'created_on'),
                               request.args.get('direction', 'ASC'))
 
-    order_by = '{0} {1}'.format(sort_by[0], sort_by[1])
+    order_values = '{0} {1}'.format(sort_by[0], sort_by[1])
 
     paginated_coupons = Coupon.query.filter(Coupon.search(request.args.get('id', ''))).order_by(text(order_values)).paginate(page, 50, True)
 
     return render_template('admin/coupon/index.html',
-                           form=search_form, bulk_form=bulk_form,
+                           form=search, bulk_form=bulk_form,
                            coupons=paginated_coupons)
 
 
 @admin.route('/coupons/new', methods=['GET', 'POST'])
+@handle_stripe_exceptions
 def coupons_new():
-    coupon = Coupon
-    form = CouponForm()
+    coupon = Coupon()
+    form = CouponForm(obj=coupon)
 
     if form.validate_on_submit():
         form.populate_obj(coupon)
@@ -160,8 +163,8 @@ def coupons_new():
         }
 
         if Coupon.create(params):
-          flash('Coupon has been created successfully.', 'succes')
-          return redirect(url_for('admin.coupons'))
+            flash('Coupon has been created successfully.', 'success')
+            return redirect(url_for('admin.coupon'))
 
     return render_template('admin/coupon/new.html', form=form, coupon=coupon)
 
@@ -171,7 +174,7 @@ def coupon_bulk_delete():
     form = BulkDeleteForm()
 
     if form.validate_on_submit():
-        ids = Coupon.get_bulkaction_ids(request.form.get('scope'),
+        ids = Coupon.get_bulk_action_ids(request.form.get('scope'),
                                         request.form.getlist('bulk_id'),
                                         query=request.args.get('q', ''))
 
@@ -182,7 +185,7 @@ def coupon_bulk_delete():
         flash("{0} coupons(s) were scheduled to be deleted.", 'success')
 
     else:
-        flash('No coupons were delted, something went wrong', 'error')
+        flash('No coupons were deleted, something went wrong', 'error')
 
     return redirect(url_for('admin.coupons'))
 
