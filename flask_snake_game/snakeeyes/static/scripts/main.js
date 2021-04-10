@@ -199,7 +199,7 @@ var stripe = function () {
       url: '/subscription/coupon_code',
       data: {coupon_code: $(couponCodeSelector).val()},
       dataType: 'json',
-      beforeSend: function (xhr) {
+      beforeSend: function (xhr) { 
         xhr.setRequestHeader('X-CSRFToken', csrfToken);
         return $couponCodeStatus.text('')
           .removeClass('alert-success alert-warning alert-error').hide();
@@ -235,6 +235,8 @@ var stripe = function () {
         return false;
       }
 
+      // The type box function help to add a delay to a when a user is typung 
+      // into the coupon bar before hitting the server to check for valid coupon code
       typewatch(function () {
         checkCouponCode(csrfToken);
       }, lookupDelayInMS);
