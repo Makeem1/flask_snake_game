@@ -8,9 +8,9 @@ from snakeeyes.blueprints.admin.form import SearchForm , BulkDeleteForm, UserFor
 from snakeeyes.blueprints.user.models import User
 from sqlalchemy import text
 from flask_login import current_user
-
+from snakeeyes.blueprints.billing.models.subscription import Subscription
 from snakeeyes.blueprints.billing.models.coupon import Coupon
-
+from snakeeyes.extensions import db 
 from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions
 
 
@@ -96,6 +96,10 @@ def users_bulk_delete():
                                        omit_ids=[current_user.id],
                                        query=request.args.get('q', ''))
 
+
+        # Import delete_users here prevent circular import 
+        from snakeeyes.blueprints.billing.tasks import delete_users
+
         delete_count = User.bulk_delete(ids)
 
         flash('{0} user(s) were scheduled to be deleted.'.format(delete_count),
@@ -105,8 +109,9 @@ def users_bulk_delete():
 
     return redirect(url_for('admin.users'))
 
+
 @admin.route('/users/cancel_subscription', methods=['POST'])
-def cancel_users_subscription():
+def users_cancel_subscription():
     form = UserCancelSubscriptionForm()
 
     if form.validate_on_submit():
