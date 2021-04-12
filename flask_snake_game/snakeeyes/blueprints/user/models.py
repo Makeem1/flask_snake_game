@@ -46,6 +46,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     # Subscription relationship
     subscription = db.relationship(Subscription, uselist=False,
                                    backref='users', passive_deletes=True)
+    # User Invoices relationship: User can have multiple relationship 
     invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
 
     # user credentials
@@ -105,7 +106,32 @@ class User(db.Model, ResourceMixin, UserMixin):
         except Exception:
             return None
 
+    @classmethod
+    def bulk_delete(cls, ids):
+        """
+        Override the general bulk delete form which delete user account and delete their subscription on stripe 
+        """
+        delete_count = 0 
 
+        for id in ids:
+            user = User.query.get('id')
+
+            if user is None:
+                continue
+
+            if user.payment_id is None:
+                user.delete()
+            else:
+                subscription = Subscription()
+
+                cancelled = subscription.cancel(user)
+
+                if cancelled:
+                    user.delete()
+
+                delete_count += 1
+
+        return delete_count
     
     @classmethod
     def initialize_password_reset(cls, identity):
