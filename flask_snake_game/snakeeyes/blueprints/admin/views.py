@@ -10,6 +10,7 @@ from sqlalchemy import text
 from flask_login import current_user
 from snakeeyes.blueprints.billing.models.subscription import Subscription
 from snakeeyes.blueprints.billing.models.coupon import Coupon
+from snakeeyes.blueprints.billing.models.invoice import Invoice
 from snakeeyes.extensions import db 
 from snakeeyes.blueprints.billing.decorators import handle_stripe_exceptions
 
@@ -66,6 +67,15 @@ def users_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
 
+    invoices = Invoice.billing_history(current_user)
+    if current_user.subscription:
+        upcoming = Invoice.upcoming(current_user.payment_id)
+        coupon = Coupon.query.\
+            filter(Coupon.code == current_user.subscription.coupon).first()
+    else:
+        upcoming = None
+        coupon = None
+
     if form.validate_on_submit():
         if User.is_last_admin(user,
                               request.form.get('role'),
@@ -83,7 +93,8 @@ def users_edit(id):
         flash('User has been saved successfully.', 'success')
         return redirect(url_for('admin.users'))
 
-    return render_template('admin/user/edit.html', form=form, user=user)
+    return render_template('admin/user/edit.html', form=form, user=user, 
+                          upcoming=upcoming, invoices=invoices, coupon = coupon)
 
 
 @admin.route('/users/bulk_delete', methods=['POST'])
