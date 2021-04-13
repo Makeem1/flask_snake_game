@@ -1,115 +1,125 @@
-import pytest
+import pytest 
 
-from config import settings
 from snakeeyes.app import create_app
 from snakeeyes.extensions import db as _db
 from snakeeyes.blueprints.user.models import User
 
-
-
 @pytest.yield_fixture(scope='session')
 def app():
-	"""Seeting test application instance"""
+	'''
+	Setting up flask test app, this only get executed at the 
+	beginning of the session 
 
-	
+	:return : flask app 
+	'''
+
 	params = {
 		'DEBUG' : False,
-		'TESTING' : True,
-		'WTF_CSRF_ENABLED': False,
-		'SQLALCHEMY_DATABASE_URI': 'postgresql://clone:Olayinka1?@localhost:5430/clone'
+		'TESTING' : True
 	}
 
-	_app = create_app(settings_override = params)
+	_app = create_app(settings_override=params)
 
+	# Extablish application context before running the test
 	ctx = _app.app_context()
+
 	ctx.push()
 
-	"""The code above the yield function serve as a set up i.e
-		establishing a application context before running the test.
-	"""
 	yield _app
-	"""The code below the yield function serve as a tear down i.e closing the 
-		application context after running the test.
-	"""
+
 	ctx.pop()
 
 
 @pytest.yield_fixture(scope='function')
 def client(app):
-	'''Setting up app client, this get executed for each test function in isolation. 
-	  test_client() help us to make request to the url without starting the server.
 	'''
+	Set up an app client, which is executed per test function
+	'''
+
 	yield app.test_client()
 
 
-@pytest.fixture(scope='session')
+@pytest.yield_fixture(scope='session')
 def db(app):
-    """
-    Setup our database, this only gets executed once per session.
+	"""
+	Setup database, this only get executed once in a session
+	:param: pytest fixture 
+	:return : SQLAlchemy database session
+	"""
 
-    :param app: Pytest fixture
-    :return: SQLAlchemy database session
-    """
-    _db.drop_all()
-    _db.create_all()
+	# Create a db table 
+	_db.drop_all()
+	_db.create_all()
 
-    # Create a single user because a lot of tests do not mutate this user.
-    # It will result in faster tests.
-    params = {
-        'role': 'admin',
-        'email': 'admin@local.host',
-        'password': 'password'
-    }
+	params = {
+		'role' : 'admin',
+		'email' : 'admin@local.host',
+		'password' : 'devpassword'
+	}
 
-    admin = User(**params)
+	admin = User(**params)
 
-    _db.session.add(admin)
-    _db.session.commit()
+	_db.session.add(admin)
+	_db.session.commit()
 
-    return _db
+	return _db
 
 
-@pytest.yield_fixture(scope='function')
+@pytest.yield_fixture()
 def session(db):
 	"""
-	Allow very fast test by using rollbacks and sessions.
+	Allow very fast tests by using rollback ands dnested session.
+	:params: pytest fixtures
+	:return : None
 	"""
-	db.session.begin_nested()
+
+	db.session.begin_nested
+
 	yield db.session
+
 	db.session.rollback()
 
 
 @pytest.fixture(scope='session')
 def token(db):
-	'''
-	Serialize a JWS token
-	'''
+	"""
+	SErialize JWS token
+	:param: pytest fixture
+	:return : JWS token 
+	"""
+
 	user = User.find_by_identity('admin@local.host')
+
 	return user.serialize_token()
 
 
 @pytest.fixture(scope='function')
 def users(db):
-	"""create a user fixture. They reset per test."""
+	"""
+	Create a user fixtures. They reset per test 
+	:param: pytest fixtures
+	:return : SQLAlchemy database session
+	"""
+
 	db.session.query(User).delete()
 
 	users = [
 		{
-			'role':'admin',
-			'email':'disabled@local.host',
-			'password':'password'
+			'role' : 'admin',
+			'email' : 'admin@local.host',
+			'password' : 'passsword'
 		},
+
 		{
-			'active':False,
-			'email': 'disabled@local.host',
-			'password': 'password'
+			'active' : False,
+			'email' : 'diable@local.com',
+			'password' : 'password' 
 		}
 	]
 
 	for user in users:
 		db.session.add(User(**user))
+
 	db.session.commit()
 
-	return db
-
-
+	return db 

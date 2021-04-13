@@ -102,6 +102,3 @@ STRIPE_PLANS = {
 
 
 
-
-
-

@@ -3,9 +3,9 @@ from snakeeyes.blueprints.user.models import User
 
 class TestUserModel(object):
 	"""docstring for TestUserModel"""
-	# def test_token_count(self, token):
-	# 	'''Function to verify that our token is working'''
-	# 	assert token.count('.') == 2
+	def test_token_count(self, token):
+		'''Function to verify that our token is working'''
+		assert token.count('.') == 2
 		
 	def test_token_verify(self, token):
 		user = User.deserializer_token(token)

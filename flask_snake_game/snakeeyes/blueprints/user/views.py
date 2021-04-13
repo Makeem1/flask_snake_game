@@ -58,6 +58,7 @@ def logout():
 
 
 @user.route('/welcome', methods=['GET', 'POST'])
+@login_required
 def welcome():
     if current_user.username:
         flash("You've choose a username after registering, operation already done.", 'info')
