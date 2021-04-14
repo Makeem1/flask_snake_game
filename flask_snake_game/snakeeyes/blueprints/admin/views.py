@@ -151,7 +151,8 @@ def coupon(page):
 
     order_values = '{0} {1}'.format(sort_by[0], sort_by[1])
 
-    paginated_coupons = Coupon.query.filter(Coupon.search(request.args.get('id', ''))).order_by(text(order_values)).paginate(page, 50, True)
+    paginated_coupons = Coupon.query.filter(Coupon.search(request.args.get('id', '')))\
+      .order_by(text(order_values)).paginate(page, 50, True)
 
     return render_template('admin/coupon/index.html',
                            form=search, bulk_form=bulk_form,
@@ -175,12 +176,12 @@ def coupons_new():
             'currency': coupon.currency,
             'redeem_by': coupon.redeem_by,
             'max_redemptions': coupon.max_redemptions,
-            'duration_in_months': coupon.duration_in_months,
+            'duration_in_months': coupon.duration_in_months
         }
 
         if Coupon.create(params):
             flash('Coupon has been created successfully.', 'success')
-            return redirect(url_for('admin.coupon'))
+            return redirect(url_for('admin.coupons'))
 
     return render_template('admin/coupon/new.html', form=form, coupon=coupon)
 

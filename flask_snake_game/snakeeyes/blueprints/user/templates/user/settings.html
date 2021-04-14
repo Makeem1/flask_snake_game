@@ -1,4 +1,5 @@
 {% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
 
 {% block title %}Account settings{% endblock %}
 
@@ -81,4 +82,22 @@
       {% endif %}
     </div>
   </div>
+
+  {% if current_user.role == 'admin' %}
+    <div class="col-md-5">
+      {% call f.form_tag('user.settings') %}
+
+        {% call f.form_group(form.plan_type) %}
+        {% endcall %}
+
+        {% call f.form_group(form.coupon_code) %}
+        {% endcall %}
+
+        {% call f.form_group(form.coupon_link, value=value) %}
+        {% endcall %}
+
+        <button class="btn btn-primary btn-sm">Generate link</button>
+      {% endcall %}
+    </div>
+  {% endif %}
 {% endblock %}

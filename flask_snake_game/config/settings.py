@@ -92,13 +92,3 @@ STRIPE_PLANS = {
         'metadata': {}
     }
 }
-
-
-
-
-
-
-
-
-
-
