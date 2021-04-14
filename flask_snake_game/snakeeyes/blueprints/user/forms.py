@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, HiddenField, BooleanField, PasswordField
+from wtforms import StringField, HiddenField, BooleanField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Length, EqualTo, Optional, ValidationError
 from wtforms_components import EmailField, Email, Unique 
 from lib.utils_wtforms import ModelForm
@@ -47,7 +47,10 @@ class SettingNewPassword(Form):
     password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
     confirm_password = PasswordField('Password', validators=[DataRequired(), Length(8, 128), EqualTo('password', message="Input must match password field ")])
     
-
+class CouponLink(Form):
+    coupon_link = StringField('Link with coupon code', validators=[Optional(), Length(min=8, max=100)])
+    plan_type = SelectField('Plan type', validators=[DataRequired()], choices=[('bronze', 'Bronze'), ('gold', 'Gold'), ('platinum', 'Platinum')])
+    coupon_code = StringField('Coupon code', validators=[DataRequired(), Length(min=4, max=20)])
 
 
 
