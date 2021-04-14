@@ -1,11 +1,13 @@
 from flask import request, flash, render_template, Blueprint, redirect, url_for
 from snakeeyes.blueprints.user.forms import (LoginForm, RegistrationForm, WelcomeForm, 
-                                                        UpdateCredential, BeginPasswordResetForm, SettingNewPassword)
+                                                        UpdateCredential, BeginPasswordResetForm, SettingNewPassword, CouponLink)
 from flask_login import login_user, logout_user, login_required, current_user
 from snakeeyes.blueprints.user.decorators import anonymous_required
 from snakeeyes.blueprints.user.models import User
 
 from lib.safe_next_url import safe_url
+from snakeeyes.blueprints.billing.models.coupon import Coupon
+from snakeeyes.extensions import db 
 
 
 user = Blueprint('user', __name__, template_folder='templates')
@@ -71,9 +73,25 @@ def welcome():
         return redirect(url_for('user.settings'))
     return render_template('user/welcome.html', form = form )
 
-@user.route('/settings')
+
+@user.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return render_template('user/settings.html')
+    form = CouponLink()
+    # To prevent reference before assignment, default it to None since no value was passed
+    plan = form.plan_type.data
+    # To prevent reference before assignment
+    value = 'http://localhost:8000/subscription/create?plan=' + plan + '&' 'coupon='
+    if form.validate_on_submit():
+        value = form.coupon_code.data
+        coupon = Coupon.query.filter_by(code=value).first()
+        if coupon is None:
+            flash('There is no such coupon on the database, check the coupon table for valid coupon code.', 'info')
+            return redirect(url_for('user.settings'))
+        else:
+            coupon_value = coupon.code
+            plan = form.plan_type.data
+            value = 'http://localhost:8000/subscription/create?plan=' + plan + '&' 'coupon=' + coupon_value
+    return render_template('user/settings.html', form = form, value = value )
 
 
 @user.route('/update_credentials', methods=['GET', 'POST'])
