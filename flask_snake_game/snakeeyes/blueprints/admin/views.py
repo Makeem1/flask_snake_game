@@ -181,7 +181,7 @@ def coupons_new():
 
         if Coupon.create(params):
             flash('Coupon has been created successfully.', 'success')
-            return redirect(url_for('admin.coupons'))
+            return redirect(url_for('admin.coupon'))
 
     return render_template('admin/coupon/new.html', form=form, coupon=coupon)
 
@@ -197,13 +197,13 @@ def coupon_bulk_delete():
 
         from snakeeyes.blueprints.billing.tasks import delete_coupons
 
-        delete_coupons.dalay(ids)
+        delete_coupons.delay(ids)
 
-        flash("{0} coupons(s) were scheduled to be deleted.", 'success')
+        flash("{0} coupons(s) were scheduled to be deleted.".format(len(ids)), 'success')
 
     else:
         flash('No coupons were deleted, something went wrong', 'error')
 
-    return redirect(url_for('admin.coupons'))
+    return redirect(url_for('admin.coupon'))
 
 

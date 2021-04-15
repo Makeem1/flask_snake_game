@@ -163,6 +163,7 @@ class Coupon(ResourceMixin, db.Model):
 
         for id in ids:
             coupon = Coupon.query.get(id)
+            print(coupon)
 
             if coupon is None:
                 continue
