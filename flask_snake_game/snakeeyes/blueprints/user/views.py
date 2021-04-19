@@ -1,4 +1,4 @@
-from flask import request, flash, render_template, Blueprint, redirect, url_for
+from flask import request, flash, render_template, Blueprint, redirect, url_for, session
 from snakeeyes.blueprints.user.forms import (LoginForm, RegistrationForm, WelcomeForm, 
                                                         UpdateCredential, BeginPasswordResetForm, SettingNewPassword, CouponLink)
 from flask_login import login_user, logout_user, login_required, current_user
