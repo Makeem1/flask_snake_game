@@ -65,8 +65,11 @@ STRIPE_PLANS = {
         'interval_count': 1,
         'trial_period_days': 14,
         'statement_descriptor': 'SNAKEEYES BRONZE',
-        'metadata': {}
+        'metadata': {
+            'coins' : 110
+        }
     },
+
     '1': {
         'id': 'gold',
         'name': 'Gold',
@@ -77,9 +80,11 @@ STRIPE_PLANS = {
         'trial_period_days': 14,
         'statement_descriptor': 'SNAKEEYES GOLD',
         'metadata': {
-            'recommended': True
+            'recommended': True,
+            'coins': 600
         }
     },
+    
     '2': {
         'id': 'platinum',
         'name': 'Platinum',
@@ -89,6 +94,26 @@ STRIPE_PLANS = {
         'interval_count': 1,
         'trial_period_days': 14,
         'statement_descriptor': 'SNAKEEYES PLATINUM',
-        'metadata': {}
+        'metadata': {
+            'coins': 1300
+        }
     }
 }
+
+DICE_ROLL_PAYOUT = {
+    '2': 36.0,
+    '3': 18.0,
+    '4': 12.0,
+    '5': 9.0,
+    '6': 7.2,
+    '7': 6.0,
+    '8': 7.2,
+    '9': 9.0,
+    '10': 12.0,
+    '11': 18.0,
+    '12': 36.0
+}
+
+RATELIMIT_STORAGE_URL = CELERY_BROKER_URL
+RATELIMIT_STRATEGY = 'fixed-window-elastic-expiry'
+RATELIMIT_HEADERS_ENABLED = True
