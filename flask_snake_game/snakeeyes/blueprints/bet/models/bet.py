@@ -62,7 +62,7 @@ class Bet(db.Model, ResourceMixin):
 
 
 	@classmethod
-	def calculate(cls, wagered, payout, is_winner):
+	def calculate_net(cls, wagered, payout, is_winner):
 		"""
 		Calculate the net won or lost 
 		:param wagered: Dice guess
@@ -92,10 +92,21 @@ class Bet(db.Model, ResourceMixin):
 		user.last_bet_on = tzware_datetime()
 		return user.save()
 
-	
+	def to_json(self):
+		"""
+		Return JSON fileds to reprresent a bet.
+		:return: dict
 
+		"""
+		params = {
+			'guess' : self.guess,
+			'die_1' : self.die_1,
+			'die_2' : self.die_2,
+			'roll' : self.roll,
+			'wagered' : self.wagered,
+			'payout' : self.payout,
+			'net' : self.net,
+			'is_winner' : Bet.is_winner(self.guess, self.roll)
+		}
 
-
-
-
-
+		return params
