@@ -13,12 +13,10 @@ from lib.util_sqlalchemy import AwareDateTime, ResourceMixin
 from snakeeyes.blueprints.billing.models.credit_card import CreditCard
 from snakeeyes.blueprints.billing.models.subscription import Subscription
 from snakeeyes.blueprints.billing.models.invoice import Invoice
+from snakeeyes.blueprints.bet.models.bet import Bet
 from flask_login import UserMixin
 from sqlalchemy import or_
 from flask import current_app, request
-
-
-
 
 
 @login_manager.user_loader
@@ -49,6 +47,9 @@ class User(db.Model, ResourceMixin, UserMixin):
     # User Invoices relationship: User can have multiple relationship 
     invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
 
+    # Bet relationship: User can have multiple bets 
+    bets = db.relationship(Bet, backref='bets', passive_delete=True)
+
     # user credentials
     role = db.Column(db.Enum(*ROLE, name = 'role_types', native_enum = False), index= True, nullable = False , server_default = 'member')
     username =db.Column(db.String(30), nullable = True, unique = True)
@@ -60,6 +61,10 @@ class User(db.Model, ResourceMixin, UserMixin):
     name = db.Column(db.String(128), index=True)
     payment_id = db.Column(db.String(128), index=True)
     cancelled_subscription_on = db.Column(AwareDateTime)
+
+    # Bets.
+    coins = db.Column(db.String(128), index=True)
+    last_bet_on = db.Column(AwareDateTime())
 
     # user traccking 
     sign_in_count = db.Column(db.Integer, nullable=False, default=0)
@@ -73,7 +78,7 @@ class User(db.Model, ResourceMixin, UserMixin):
         super().__init__(**kwargs)
 
         self.password = User.encrypt_password(kwargs.get('password', ''))
-
+        self.coins = 100
 
     @classmethod
     def encrypt_password(cls, plaintext_password):
