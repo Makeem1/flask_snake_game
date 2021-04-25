@@ -48,7 +48,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
 
     # Bet relationship: User can have multiple bets 
-    bets = db.relationship(Bet, backref='bets', passive_delete=True)
+    bets = db.relationship(Bet, backref='bets', passive_deletes=True)
 
     # user credentials
     role = db.Column(db.Enum(*ROLE, name = 'role_types', native_enum = False), index= True, nullable = False , server_default = 'member')
@@ -61,6 +61,7 @@ class User(db.Model, ResourceMixin, UserMixin):
     name = db.Column(db.String(128), index=True)
     payment_id = db.Column(db.String(128), index=True)
     cancelled_subscription_on = db.Column(AwareDateTime)
+    previous_plan = db.Column(db.String(128))
 
     # Bets.
     coins = db.Column(db.String(128), index=True)
@@ -78,7 +79,7 @@ class User(db.Model, ResourceMixin, UserMixin):
         super().__init__(**kwargs)
 
         self.password = User.encrypt_password(kwargs.get('password', ''))
-        self.coins = 100
+        self.coins = 100 # new user have 100 coins 
 
     @classmethod
     def encrypt_password(cls, plaintext_password):
@@ -224,7 +225,20 @@ class User(db.Model, ResourceMixin, UserMixin):
         self.current_sign_in_on = datetime.datetime.now(pytz.utc)
         self.current_sign_in_ip = ip_address
 
-        return self.save()    
+        return self.save()  
+
+    def add_coins(self, plan):
+        """
+        Add an amount of coin to an existing user
+        :param plan: Subscription plan 
+        :param type: str
+        :return: SQLAlchemy commit results
+        """  
+
+        self.coins += plan['metadata']['coins']
+
+        return self.save()
+
 
 
 
