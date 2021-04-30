@@ -55,12 +55,13 @@ REMEMBER_COOKIE_DURATION = timedelta(days=90)
 STRIPE_SECRET_KEY = 'sk_test_51IWV8MKKBISTKSZXn8bVHDuSPzMpkBooewRaVVQqKBfty8ebRygkBGl0iZMkePtEBUJLJKwqJotnQws0MRqNkGUX00ikA2m2P8'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51IWV8MKKBISTKSZXNSODH7mvRhj5uPkIHoFU1fPrtOXkLVWez5Fwy526Qb6ximsdxxfij9b0JYHmn44bhHyZrt2200zVMOhRm7'
 STRIPE_API_VERSION = '2016-03-07'
+STRIPE_CURRENCY = 'usd'
 STRIPE_PLANS = {
     '0': {
         'id': 'bronze',
         'name': 'Bronze',
         'amount': 100,
-        'currency': 'usd',
+        'currency': STRIPE_CURRENCY,
         'interval': 'month',
         'interval_count': 1,
         'trial_period_days': 14,
@@ -74,7 +75,7 @@ STRIPE_PLANS = {
         'id': 'gold',
         'name': 'Gold',
         'amount': 500,
-        'currency': 'usd',
+        'currency': STRIPE_CURRENCY,
         'interval': 'month',
         'interval_count': 1,
         'trial_period_days': 14,
@@ -89,7 +90,7 @@ STRIPE_PLANS = {
         'id': 'platinum',
         'name': 'Platinum',
         'amount': 1000,
-        'currency': 'usd',
+        'currency': STRIPE_CURRENCY,
         'interval': 'month',
         'interval_count': 1,
         'trial_period_days': 14,
@@ -99,6 +100,14 @@ STRIPE_PLANS = {
         }
     }
 }
+
+
+COINS_BUNDLES = [
+    {'coins': 100, 'price_in_cents': 100, 'label': '100 for $1'},
+    {'coins': 1000, 'price_in_cents': 900, 'label': '1,000 for $9'},
+    {'coins': 5000, 'price_in_cents': 4000, 'label': '5,000 for $40'},
+    {'coins': 10000, 'price_in_cents': 7000, 'label': '10,000 for $70'},
+]
 
 DICE_ROLL_PAYOUT = {
     '2': 36.0,
@@ -114,6 +123,6 @@ DICE_ROLL_PAYOUT = {
     '12': 36.0
 }
 
-RATELIMIT_STORAGE_URL = CELERY_BROKER_URL
+RATELIMIT_STORAGE_URL = CELERY_BROKER_URL # Store the rate limiter in the celery database
 RATELIMIT_STRATEGY = 'fixed-window-elastic-expiry'
 RATELIMIT_HEADERS_ENABLED = True

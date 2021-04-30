@@ -41,6 +41,7 @@ class UserForm(ModelForm):
         # we need to explicitly define our regex pattern with r'xxx'.
         Regexp(r'^\w+$', message=username_message)
     ])
+    coins = StringField('coins', validators=[DataRequired(), Length(min=1, max=234567812 )])
 
     role = SelectField('Privileges', [DataRequired()],
                        choices=choices_from_dict(User.ROLE,

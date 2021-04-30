@@ -83,8 +83,9 @@ class Bet(ResourceMixin, db.Model):
         :return: SQLAlchemy save result
         """
         self.save()
+        print(user.coins, self.net)
 
-        user.coins += self.net
+        user.coins = user.coins + self.net
         user.last_bet_on = tzware_datetime()
         return user.save()
 

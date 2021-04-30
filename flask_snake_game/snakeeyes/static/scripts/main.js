@@ -116,10 +116,10 @@ var coupons = function () {
 };
 
 // Handling processing payments with Stripe.
-var stripe = function () {
+var stripe = function (form_id) {
   var couponCodeSelector = '#coupon_code';
   
-  var $form = $('#payment_form');
+  var $form = $(form_id);
   var $couponCode = $(couponCodeSelector);
   var $couponCodeStatus = $('#coupon_code_status');
   var $stripeKey = $('#stripe_key');
@@ -324,7 +324,7 @@ var bets = function () {
 
       var guessCol = '<td>' + parsed_data.guess + '</td>';
       var rollCol = '<td>' + parsed_data.roll + '</td>';
-      var wageredCol = '<td class="text-warning"><i class="fa fa-fw fa-database"></i> ' + parsed_data.wagered + '</td>';
+      var wageredCol = '<td class="text-warning"><i class="fa-lg fa-fw fa-database"></i> ' + parsed_data.wagered + '</td>';
       var payoutCol = '<td>' + parseFloat(parsed_data.payout) + 'x</td>';
       var netCol = '<td class="text-' + bet_class + '"><i class="fa fa-fw fa-database"></i> ' + parsed_data.net + '</td>';
 
@@ -376,7 +376,8 @@ $(document).ready(function() {
   momentjsClasses();
   bulkDelete();
   coupons();
-  stripe();
+  stripe('#subscription_form');
+  stripe('#payment_form');
   bets();
 });
 

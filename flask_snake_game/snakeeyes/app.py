@@ -10,8 +10,10 @@ from snakeeyes.blueprints.user import user
 from snakeeyes.blueprints.admin import admin 
 from snakeeyes.blueprints.error_page import error
 from snakeeyes.blueprints.billing import billing
+from snakeeyes.blueprints.bet import bet
 from snakeeyes.blueprints.billing import stripe_webhook
 from snakeeyes.extensions import (
+	limiter,
 	debug_toolbar, 
 	mail, 
 	Csrf,
@@ -96,6 +98,8 @@ def create_app(settings_override = None):
 	app.register_blueprint(contact)
 	app.register_blueprint(user)
 	app.register_blueprint(admin)
+	app.register_blueprint(bet)
+
 	extension(app)
 
 	return app
@@ -116,6 +120,7 @@ def extension(app):
 	db.init_app(app)
 	print(db.init_app(app))
 	login_manager.init_app(app)
+	limiter.init_app(app)
 
 	return None
 

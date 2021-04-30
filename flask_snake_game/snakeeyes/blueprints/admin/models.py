@@ -2,6 +2,7 @@ from snakeeyes.blueprints.user.models import User
 from snakeeyes.blueprints.billing.models.subscription import Subscription
 from sqlalchemy import func
 from snakeeyes.extensions import db 
+from snakeeyes.blueprints.bet.models.bet import Bet
 
 class Dashboard(object):
 	@classmethod
@@ -34,6 +35,15 @@ class Dashboard(object):
 			percent = round((not_null / float(total)) * 100, 1)
 
 		return not_null, total, percent
+
+	@classmethod
+	def groupand_and_count_payouts(cls):
+		"""
+		Perform a group and count on all payout 
+		:return : dic
+		"""
+
+		return Dashboard._group_and_count(Bet, Bet.payout)
 
 
 	@classmethod

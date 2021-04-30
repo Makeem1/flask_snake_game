@@ -64,8 +64,8 @@ class User(db.Model, ResourceMixin, UserMixin):
     previous_plan = db.Column(db.String(128))
 
     # Bets.
-    coins = db.Column(db.String(128), index=True)
-    last_bet_on = db.Column(AwareDateTime())
+    coins = db.Column(db.Integer())
+    last_bet_on = db.Column(db.DateTime, default=datetime.datetime.utcnow )
 
     # user traccking 
     sign_in_count = db.Column(db.Integer, nullable=False, default=0)
@@ -79,7 +79,7 @@ class User(db.Model, ResourceMixin, UserMixin):
         super().__init__(**kwargs)
 
         self.password = User.encrypt_password(kwargs.get('password', ''))
-        self.coins = 100 # new user have 100 coins 
+        self.coins = 100
 
     @classmethod
     def encrypt_password(cls, plaintext_password):
