@@ -185,3 +185,7 @@ dd {
 a.pricing--primary {
   color: #fff;
 }
+
+.big {
+  font-size: 40px;
+}
