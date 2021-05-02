@@ -188,7 +188,8 @@ def update_payment_method():
 @handle_stripe_exceptions
 @login_required
 def billing_details():
-    invoices = Invoice.billing_history(current_user)
+    paginated_invoices = Invoice.query.filter(Invoice.user_id == current_user.id)\
+    .order_by(Invoice.created_on.desc()).paginate(page, 12, True)
 
     if current_user.subscription:
         upcoming = Invoice.upcoming(current_user.payment_id)
@@ -199,4 +200,38 @@ def billing_details():
         coupon = None
 
     return render_template('billing/billing_details.html',
-                           invoices=invoices, upcoming=upcoming, coupon=coupon)
+                           paginated_invoices=paginated_invoices, 
+                           upcoming=upcoming, coupon=coupon)
+
+
+@billing.route('/purchase_coins', methods=['GET', 'POST'])
+@login_required
+def purchase_coins():
+    stripe_key = current_app.config.get('STRIPE_PUBLISHABLE_KEY')
+    form = PaymentForm(stripe_key=stripe_key)
+
+    if form.validate_on_submit():
+        coin_bundles = current_app.config.get('COIN_BUNDLES')
+        coin_bundles_form = int(request.form.get('coins_bundles'))
+
+        bundle = next((item for item in coin_bundles if items['coins'] == coin_bundles_form), None)
+
+        if bundle is not None:
+            invoice = Invoice()
+            created = invoice.create(user=current_user,
+                                    currency = current_app.config.get('STRIPE_CURRENCY'),
+                                    amount = bundle.get('price_in_cents'),
+                                    coins = coin_bundles_form,
+                                    coupon = request.form.get('coupon_code'),
+                                    token = request.form.get('stripe_token')
+                                    )
+            if created:
+                flash("{0} coins have been added to your account.".format(coin_bundles_form), 'success')
+            else:
+                flash("You must enable Javascript for this request.", "warning")
+
+            return redirect(url_for('bet.place_bet'))
+
+
+    return render_template('billing/purcahse_coins.html', form=form)
+
