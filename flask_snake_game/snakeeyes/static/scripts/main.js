@@ -118,7 +118,7 @@ var coupons = function () {
 // Handling processing payments with Stripe.
 var stripe = function (form_id) {
   var couponCodeSelector = '#coupon_code';
-  
+
   var $form = $(form_id);
   var $couponCode = $(couponCodeSelector);
   var $couponCodeStatus = $('#coupon_code_status');
@@ -248,7 +248,7 @@ var stripe = function (form_id) {
       $spinner.show();
     });
 
-    $('body').on('submit', '#payment_form', function () {
+    $('body').on('submit', form_id, function () {
       var $form = $(this);
       var $name = $('#name');
 
