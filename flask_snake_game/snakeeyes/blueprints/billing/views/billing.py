@@ -13,12 +13,13 @@ from flask_login import login_required, current_user
 from config import settings
 from lib.util_json import render_json
 from snakeeyes.blueprints.billing.forms import CreditCardForm, \
-    UpdateSubscriptionForm, CancelSubscriptionForm
+    UpdateSubscriptionForm, CancelSubscriptionForm, PaymentForm
 from snakeeyes.blueprints.billing.models.coupon import Coupon
 from snakeeyes.blueprints.billing.models.subscription import Subscription
 from snakeeyes.blueprints.billing.models.invoice import Invoice
 from snakeeyes.blueprints.billing.decorators import subscription_required, \
     handle_stripe_exceptions
+from snakeeyes.blueprints.billing.gateways.stripecom import Customer 
 
 billing = Blueprint('billing', __name__, template_folder='../templates',
                     url_prefix='/subscription')
@@ -184,10 +185,11 @@ def update_payment_method():
                            plan=active_plan, card_last4=str(card.last4))
 
 
-@billing.route('/billing_details')
+@billing.route('/billing_details', defaults={'page':1} )
+@billing.route('/billing_details/page/<int:page>')
 @handle_stripe_exceptions
 @login_required
-def billing_details():
+def billing_details(page):
     paginated_invoices = Invoice.query.filter(Invoice.user_id == current_user.id)\
     .order_by(Invoice.created_on.desc()).paginate(page, 12, True)
 
