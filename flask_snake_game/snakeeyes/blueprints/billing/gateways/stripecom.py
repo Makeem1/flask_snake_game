@@ -51,7 +51,7 @@ class Customer(object):
         return stripe.Customer.create(**params)
 
 
-class charge(object):
+class Charge(object):
     @classmethod
     def create(cls, customer_id=None, currency=None, amount=None):
         """
@@ -69,6 +69,7 @@ class charge(object):
             currency=currency,
             customer_id=customer_id,
             statement_descriptor="SNAKEEYES COINS") 
+
 
 class Coupon(object):
     @classmethod
