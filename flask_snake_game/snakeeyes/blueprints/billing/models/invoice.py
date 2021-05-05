@@ -4,6 +4,10 @@ from lib.util_sqlalchemy import ResourceMixin
 from snakeeyes.extensions import db
 from snakeeyes.blueprints.billing.gateways.stripecom import \
     Invoice as PaymentInvoice
+from snakeeyes.blueprints.billing.gateways.stripecom import (Customer as PaymentCustomer,
+                                                            Charge as PaymentCharge,
+                                                            Invoice as PaymentInvoice)
+from snakeeyes.blueprints.billing.models.credit_card import CreditCard
 
 
 class Invoice(ResourceMixin, db.Model):
@@ -143,3 +147,70 @@ class Invoice(ResourceMixin, db.Model):
         invoice = PaymentInvoice.upcoming(customer_id)
 
         return Invoice.parse_from_api(invoice)
+
+
+    def create(self, user=None, currency=None, amount=None, coins=None, 
+                coupon=None, token=None):
+
+          """
+        Create an invoice item.
+
+        :param user: User to apply the subscription to
+        :type user: User instance
+        :param amount: Stripe currency
+        :type amount: str
+        :param amount: Amount in cents
+        :type amount: int
+        :param coins: Amount of coins
+        :type coins: int
+        :param coupon: Coupon code to apply
+        :type coupon: str
+        :param token: Token returned by JavaScript
+        :type token: str
+        :return: bool
+        """
+
+        if token is None:
+            return False
+
+        customer = PaymentCustomer.create(token=token, email=user.email)
+
+
+        if coupon:
+            self.coupon = coupon.upper()
+            coupon = Coupon.query.filter(Coupon.code == self.coupon).first()
+            amount = coupon.apply_discount_to(amount)
+
+        charge = PaymentCharge.create(customer.id, currency, amount)
+
+        # Redeem the coupon if there's coupon 
+        if coupon: 
+            coupon.redeem()
+
+        # Add the coins to the user
+        user.coins += coins
+
+        # Create the invoice item 
+        period_on = datetime.datetime.utcfromtimestamp(charge.get('created'))
+        cards_params = CreditCard.extract_card_params(customer)
+
+
+        self.user_id = user.id
+        self.plan = '&mdash;'
+        self.receipt_number = charge.get('receipt_number')
+        self.description = charge.get('statement_descriptor')
+        self.period_start_on = period_on
+        self.period_end_on = period_on
+        self.currency = charge.get('currency')
+        self.tax = None
+        self.tax_percent = None
+        self.total = charge.get('amount')
+        self.brand = card_params.get('brand')
+        self.last4 = card_params.get('last4')
+        self.exp_date = card_params.get('exp_date')
+
+        db.session.add(user)
+        db.session.add(self)
+        db.session.commit()        
+
+        return True
