@@ -213,10 +213,10 @@ def purchase_coins():
     form = PaymentForm(stripe_key=stripe_key)
 
     if form.validate_on_submit():
-        coin_bundles = current_app.config.get('COIN_BUNDLES')
+        coin_bundles = current_app.config.get('COINS_BUNDLES')
         coin_bundles_form = int(request.form.get('coins_bundles'))
 
-        bundle = next((item for item in coin_bundles if items['coins'] == coin_bundles_form), None)
+        bundle = next((item for item in coin_bundles if item['coins'] == coin_bundles_form), None)
 
         if bundle is not None:
             invoice = Invoice()
@@ -235,5 +235,5 @@ def purchase_coins():
             return redirect(url_for('bet.place_bet'))
 
 
-    return render_template('billing/purcahse_coins.html', form=form)
+    return render_template('billing/purchase_coins.html', form=form)
 
