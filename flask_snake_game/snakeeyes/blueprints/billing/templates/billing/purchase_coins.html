@@ -10,7 +10,7 @@
       {% call f.form_tag('billing.purchase_coins', fid='payment_form') %}
         <legend>Purchase coins</legend>
 
-        {% call f.form_group(form.coin_bundles, css_class='sm-margin-bottom') %}
+        {% call f.form_group(form.coins_bundles, css_class='sm-margin-bottom') %}
         {% endcall %}
 
         {{ billing.payment_form(form, 'Process payment', True) }}
